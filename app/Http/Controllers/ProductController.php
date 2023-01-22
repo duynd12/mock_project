@@ -1,21 +1,20 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\Attribute;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\ProductRepository;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
     private $productRepository;
-
-    public function __construct(ProductRepository $_productRepository)
+    private $productService;
+    public function __construct(ProductRepository $_productRepository, ProductService $_productService)
     {
         $this->productRepository = $_productRepository;
+        $this->productService = $_productService;
     }
     /**
      * Display a listing of the resource.
@@ -24,10 +23,18 @@ class ProductController extends Controller
      */
     public function index()
     {
-        // $data = Product::paginate(\App\Constants\Product::PRODUCT_LIST_LIMIT);
+        $data = $this->productRepository->paginate(5);
+        return view('products.productManager', ['data' => $data]);
+    }
 
-        $data = $this->productRepository->all();
-        return response()->json($data);
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return view('products.addProduct');
     }
 
     /**
@@ -38,7 +45,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->productService->createProduct($request);
     }
 
     /**
@@ -49,10 +56,18 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $data = Product::with('images')->get()->find($id);
-        $data2 = Product::with('attributes')->get()->find($id);
-        $data['attributes'] = $data2['attributes'];
-        return response()->json($data);
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
     }
 
     /**

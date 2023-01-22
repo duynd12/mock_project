@@ -1,33 +1,33 @@
 <?php
 
-namespace App\Http\Controllers\api;
+namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
-use App\Models\Product;
-use App\Models\Attribute;
-use App\Repositories\ProductRepository;
+use App\Repositories\CategoryRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class ProductController extends Controller
+class CategoryController extends Controller
 {
-    private $productRepository;
+    private $categoryRepository;
 
-    public function __construct(ProductRepository $_productRepository)
+    public function __construct(CategoryRepository $_categoryRepository)
     {
-        $this->productRepository = $_productRepository;
+        $this->categoryRepository = $_categoryRepository;
     }
+
+    public function index()
+    {
+        $data = $this->categoryRepository->paginate(5);
+        return view('categories.categoryManager', ['data' => $data]);
+    }
+
     /**
-     * Display a listing of the resource.
+     * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function create()
     {
-        // $data = Product::paginate(\App\Constants\Product::PRODUCT_LIST_LIMIT);
-
-        $data = $this->productRepository->all();
-        return response()->json($data);
+        //
     }
 
     /**
@@ -49,10 +49,18 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $data = Product::with('images')->get()->find($id);
-        $data2 = Product::with('attributes')->get()->find($id);
-        $data['attributes'] = $data2['attributes'];
-        return response()->json($data);
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        //
     }
 
     /**

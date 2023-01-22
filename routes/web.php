@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\Route;
@@ -15,16 +18,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
 Route::get('/', function () {
-    $product = Product::find(1)->attributes;
-    foreach ($product as $pro) {
-        var_dump($pro);
-    }
+    return view('index');
+});
+Route::controller(ProductController::class)->group(function () {
+    Route::get('/product-manager', 'index')->name('product.index');
+    Route::get('/them-san-pham', 'create')->name('product.create');
+    Route::post('/createProduct', 'store')->name('prodcut.store');
+    Route::get('/sua-san-pham/{id}', 'edit')->name('product.edit');
+    Route::post('/edit-product/{id}', 'update')->name('product.update');
+    Route::get('/deleteProduct/{id}', 'destroy')->name('product.destroy');
 });
 
-Route::get('/listCategories', function () {
-    $product = Category::find(1)->products;
-    foreach ($product as $pro) {
-        var_dump($pro);
-    }
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('/quan-ly-danh-muc', 'index')->name('category.index');
+    Route::get('/quan-ly-danh-muc/{id}', 'edit')->name('category.edit');
+    Route::post('/edit-category/{id}', 'update')->name('category.update');
+    Route::post('/createCategory', 'store')->name('category.store');
+    Route::get('/deleteCategory/{id}', 'destroy')->name('category.destroy');
+    Route::get('/them-danh-muc', 'create')->name('category.create');
 });
+
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
