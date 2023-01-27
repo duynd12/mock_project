@@ -21,6 +21,8 @@
 </head>
 
 <body class="antialiased">
+{!! Notify::render() !!}
+
     <aside id="left-panel" class="left-panel">
         <nav class="navbar navbar-expand-sm navbar-default">
             <div id="main-menu" class="main-menu collapse navbar-collapse">
@@ -37,6 +39,9 @@
                     </li>
                     <li class="menu-item-has-children1 dropdown">
                         <a href="{{route('category.index')}}" aria-haspopup="true" aria-expanded="false">Quản lý danh mục</a>
+                    </li>
+                    <li class="menu-item-has-children1 dropdown">
+                        <a href="{{route('attribute.index')}}" aria-haspopup="true" aria-expanded="false">Quản lý thuộc tính</a>
                     </li>
                     <li class="menu-item-has-children1 dropdown">
                         <a href="{{route('product.index')}}" aria-haspopup="true" aria-expanded="false">Đổi mật khẩu</a>
@@ -84,7 +89,6 @@
         <div class="content">
             <!-- Animated -->
             <div class="animated fadeIn">
-            {!! Notify::render() !!}
                 @yield('content')
                 
                 <div class="modal fade none-border" id="add-category">

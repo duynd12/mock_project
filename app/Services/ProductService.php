@@ -57,11 +57,30 @@ class ProductService
                 }
             }
             DB::commit();
-            Notify::success('thanh cong', $title = null, $options = []);
-            return redirect()->route('product.index');
+            Notify::success('Thêm sản phẩm thành công', $title = null, $options = []);
         } catch (\throwable $th) {
             throw $th;
+            Notify::error('Thêm sản phẩm thất bại', $title = null, $options = []);
             DB::rollback();
         }
+    }
+
+    public function deleteProduct($id)
+    {
+        try {
+            $this->productRepository->delete($id);
+            Notify::success('Xóa sản phẩm thành công', $title = null, $options = []);
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+            Notify::error('Xóa sản phẩm thất bại', $title = null, $options = []);
+        }
+    }
+    public function getProductById($id)
+    {
+        return $this->productRepository->find($id);
+    }
+    public function updateProduct(array $data, $id)
+    {
+        return $this->productRepository->update($data, $id);
     }
 }

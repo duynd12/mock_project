@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
@@ -39,5 +40,13 @@ Route::controller(CategoryController::class)->group(function () {
     Route::get('/deleteCategory/{id}', 'destroy')->name('category.destroy');
     Route::get('/them-danh-muc', 'create')->name('category.create');
 });
-
+Route::controller(AttributeController::class)->group(function () {
+    Route::get('/quan-ly-thuoc-tinh', 'index')->name('attribute.index');
+    Route::get('/quan-ly-thuoc-tinh/{id}', 'edit')->name('attribute.edit');
+    Route::post('/edit-attribute/{id}', 'update')->name('attribute.update');
+    Route::post('/attribute', 'store')->name('attribute.store');
+    Route::get('/deleteAttribute/{id}', 'destroy')->name('attribute.destroy');
+    Route::get('/them-thuoc-tinh', 'create')->name('attribute.create');
+});
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
+// Route::get('/quan-ly-thuoc-tinh', [AttributeController::class, 'index'])->name('attribute.index');

@@ -16,4 +16,8 @@ class ProductRepository extends BaseRepository implements ProductRepositoryInter
     {
         return $this->model::all()->count();
     }
+    // public function all()
+    // {
+    //     return $this->model::with('images')->with('attributes')->get();
+    // }
 }

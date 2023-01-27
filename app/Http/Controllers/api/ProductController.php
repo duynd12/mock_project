@@ -49,9 +49,9 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $data = Product::with('images')->get()->find($id);
-        $data2 = Product::with('attributes')->get()->find($id);
-        $data['attributes'] = $data2['attributes'];
+        $data = Product::with(['images', 'attributes'])->get()->find($id);
+        // $data2 = Product::with('attributes')->get()->find($id);
+        // $data['attributes'] = $data2['attributes'];
         return response()->json($data);
     }
 

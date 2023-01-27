@@ -44,6 +44,7 @@ class BaseRepository implements BaseRepositoryInterface
      */
     public function create(array $input)
     {
+        dd($input);
         return $this->model->create($input);
     }
 
@@ -52,11 +53,14 @@ class BaseRepository implements BaseRepositoryInterface
      */
     public function update(array $input, $id)
     {
-        $model = $this->model->findOrFail($id);
-        $model->fill($input);
-        $model->save();
 
-        return $this;
+        // $model = $this->model->findOrFail($id);
+        // $model->fill($input);
+        // $model->save();
+
+        // return $this;
+
+        return $this->model::findOrFail($id)->update($input);
     }
 
     /**

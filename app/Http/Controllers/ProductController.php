@@ -2,19 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AttributeValue;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\ProductRepository;
 use App\Services\ProductService;
+use Helmesvs\Notify\Facades\Notify;
 use Illuminate\Http\Request;
+use App\Models\Product;
+use App\Models\Attribute;
+use App\Repositories\AttributeRepository;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
     private $productRepository;
     private $productService;
-    public function __construct(ProductRepository $_productRepository, ProductService $_productService)
+    private $attributeRepository;
+    public function __construct(ProductRepository $_productRepository, ProductService $_productService, AttributeRepository $_attributeRepository)
     {
         $this->productRepository = $_productRepository;
         $this->productService = $_productService;
+        $this->attributeRepository = $_attributeRepository;
     }
     /**
      * Display a listing of the resource.
@@ -24,6 +32,8 @@ class ProductController extends Controller
     public function index()
     {
         $data = $this->productRepository->paginate(5);
+        // $attribute_value = AttributeValue::all();
+        // $data = Product::with(['images', 'attributes'])->get();
         return view('products.productManager', ['data' => $data]);
     }
 
@@ -34,7 +44,25 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.addProduct');
+        // $color_value = Attribute::with('attributeValues')->where('name', 'color')->get();
+        // $size_value = Attribute::with('attributeValues')->where('name', 'size')->get();
+        // foreach ($color_value as $color) {
+        //     var_dump($color);
+        // }
+        // // dd($color_value);
+        // $data = DB::table('attributes')
+        //     ->join('attribute_values', 'attributes.id', '=', 'attribute_values.attribute_id')
+        //     ->where('attributes.name', '=', 'size')
+        //     ->select('attributes.id', 'attributes.name', 'attribute_values.value_name')
+        //     ->get();
+
+        $color_values = $this->attributeRepository->getAttributeValue('color');
+        $size_values = $this->attributeRepository->getAttributeValue('size');
+        return view('products.addProduct', [
+            'colors' => $color_values,
+            'sizes' => $size_values
+            // 'sizes' => $data
+        ]);
     }
 
     /**
@@ -46,6 +74,7 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->productService->createProduct($request);
+        return redirect()->route('product.create');
     }
 
     /**
@@ -54,9 +83,8 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
     }
 
     /**
@@ -67,7 +95,8 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = $this->productService->getProductById($id);
+        return view('products.editProduct', ['data' => $data]);
     }
 
     /**
@@ -79,7 +108,15 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        $result = $this->productService->updateProduct($data, $id);
+        if ($result) {
+            Notify::success('Sửa sản phẩm thành công', $title = null, $options = []);
+            return redirect()->route('product.index');
+        } else {
+            Notify::error('Sửa sản phẩm thất bại', $title = null, $options = []);
+            return redirect()->route('product.edit', $id);
+        }
     }
 
     /**
@@ -90,6 +127,7 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->productService->deleteProduct($id);
+        return redirect()->route('product.index');
     }
 }

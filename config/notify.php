@@ -13,7 +13,7 @@ return [
     //Toastr
     //Documentation: https://github.com/CodeSeven/toastr#other-options
     'ToastrOptions' => [
-        "closeButton" => false, //Optionally enable a close button
+        "closeButton" => true, //Optionally enable a close button
         //"closeHtml" => '', //Optionally override the close button's HTML. <button><i class="icon-off"></i></button>
         "newestOnTop" => true,
         "progressBar" => false, //Visually indicate how long before a toast expires.
@@ -95,4 +95,3 @@ return [
         ],
     ]
 ];
-

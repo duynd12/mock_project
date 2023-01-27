@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attribute;
 use Illuminate\Http\Request;
 
 class AttributeController extends Controller
@@ -13,7 +14,9 @@ class AttributeController extends Controller
      */
     public function index()
     {
-        //
+        $data = Attribute::paginate(5);
+        // dd($data);
+        return view('attributes.attributeManager', ['data' => $data]);
     }
 
     /**

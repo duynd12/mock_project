@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('attribute_products', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('attribute_id')->constrained('attributes')->onDelete('cascade');
-            $table->string('value_name');
+            $table->bigInteger('attribute_value_id')->unsigned();
+            $table->foreign('attribute_value_id')->references('id')->on('attribute_values')->onCascade('delete');
             $table->timestamps();
         });
     }
