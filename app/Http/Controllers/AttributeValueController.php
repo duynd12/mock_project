@@ -2,33 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attribute;
-use App\Repositories\AttributeRepository;
-use App\Services\AttributeService;
+use App\Models\AttributeValue;
 use Illuminate\Http\Request;
 
-class AttributeController extends Controller
+class AttributeValueController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    private $attributeService;
-    public function __construct(AttributeService $_attributeService)
-    {
-        $this->attributeService = $_attributeService;
-    }
     public function index()
     {
-        $data = Attribute::paginate(5);
-        // dd($data);
-        return view('attributes.attributeManager', ['data' => $data]);
+        $data = AttributeValue::all();
+        return view('attributes.AttributeValueManager');
     }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create()
     {
-        return view('attributes.addAttribute');
+        //
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -37,8 +36,7 @@ class AttributeController extends Controller
      */
     public function store(Request $request)
     {
-        $this->attributeService->createAttribute($request);
-        return redirect()->route('attribute.create');
+        //
     }
 
     /**
@@ -48,6 +46,17 @@ class AttributeController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
     {
         //
     }

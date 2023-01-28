@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -50,3 +51,27 @@ Route::controller(AttributeController::class)->group(function () {
 });
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 // Route::get('/quan-ly-thuoc-tinh', [AttributeController::class, 'index'])->name('attribute.index');
+Route::get('/test', function () {
+    $data['product_name'] = DB::table('category_products as cp')
+        ->join('categories as c', 'c.id', '=', 'cp.category_id')
+        ->join('products as p', 'p.id', '=', 'cp.product_id')
+        ->where('c.id', '=', 1)
+        ->select('p.id')
+        ->get()
+        ->keyBy('id')
+        ->toArray();
+    // foreach ($data as $d) {
+    //     // dd($d);
+    //     array_push($array, $d);
+    // }    
+    // dd($data);
+    // $data2 = $request->only('products');
+
+    // foreach ($data['product_name'] as $key => $val) {
+    //     array_push($array, $d);
+    // }
+    // dd($data);
+    // dd($data2);
+    // $diffarray = array_diff($data, $data2);
+    // dd($diffarray);
+});

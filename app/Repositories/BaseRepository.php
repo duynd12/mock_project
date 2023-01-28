@@ -44,7 +44,6 @@ class BaseRepository implements BaseRepositoryInterface
      */
     public function create(array $input)
     {
-        dd($input);
         return $this->model->create($input);
     }
 

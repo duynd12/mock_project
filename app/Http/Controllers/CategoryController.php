@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Repositories\CategoryRepository;
+use Helmesvs\Notify\Facades\Notify;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -27,7 +30,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        //
+        return view('categories.addCategory');
     }
 
     /**
@@ -38,7 +41,15 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+            $data = $request->only('title', 'parentId');
+
+            $this->categoryRepository->create($data);
+            return redirect()->route('categories.addCategory');
+            Notify::success('Them thanh cong');
+        } catch (\Exception $e) {
+            Notify::error($e->getMessage());
+        }
     }
 
     /**
@@ -49,7 +60,6 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        //
     }
 
     /**
@@ -60,7 +70,18 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        //
+
+        $data = $this->categoryRepository->find($id);
+        $data['product_name'] = DB::table('category_products as cp')
+            ->join('categories as c', 'c.id', '=', 'cp.category_id')
+            ->join('products as p', 'p.id', '=', 'cp.product_id')
+            ->where('c.id', '=', $id)
+            ->select('p.id', 'p.name')
+            ->get()
+            // ->keyBy('name')
+            ->toArray();
+        // dd($data);
+        return view('categories.editCategory', ['data' => $data]);
     }
 
     /**
@@ -72,7 +93,47 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $array = [];
+        $data = DB::table('category_products as cp')
+            ->join('categories as c', 'c.id', '=', 'cp.category_id')
+            ->join('products as p', 'p.id', '=', 'cp.product_id')
+            ->where('c.id', '=', $id)
+            ->select('p.id')
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+        $data2 = $request->only('products');
+        foreach ($data as $key => $value) {
+            $array[] = $key;
+        };
+        $diff_array = array_diff($array, $data2['products']);
+        foreach ($diff_array as $d) {
+            if (in_array($d, $array)) {
+
+                // xoa san pham
+                echo "co danh muc do";
+            }
+
+            // them san pham
+        }
+        // dd($data);
+        // dd($array_diff($data['pro']))
+        // foreach ($data2['products'] as $key => $value) {
+        //     if (in_array($key, $data['product_name'])) {
+        //         echo $key;      
+        //         echo "true";
+        //     }
+        //     // $array[] = $key;
+        // }
+        // dd($array);
+        // foreach ($data['products'] as $key => $value) {
+        //     echo $value;
+        // }
+        // foreach($data2['products'] as $key => $value){
+        //     if(in_array($key,))
+        // }
+        // $diffarray = array_diff($data, $data2);
+        // dd($diffarray);
     }
 
     /**
