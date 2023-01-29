@@ -42,9 +42,10 @@ class BaseRepository implements BaseRepositoryInterface
     /**
      * Save a new entity in repository
      */
-    public function create(array $input)
+    public function create($input)
     {
-        return $this->model->create($input);
+        // dd($input);
+        return $this->model::create($input);
     }
 
     /**

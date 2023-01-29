@@ -33,12 +33,13 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        //
+        $data = Category::with('products')->where('title', $id)->get();
+        return response()->json($data);
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\AttributeProduct;
+use App\Models\Product;
 use App\Repositories\ImageRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Support\Facades\DB;
@@ -25,20 +27,24 @@ class ProductService
             DB::beginTransaction();
 
             $data = $request->all();
-            $reslut = $this->productRepository->create($data);
+            $data2 = $request->only(['name', 'price', 'description', 'quantity']);
+            // dd($data);
+            $reslut = $this->productRepository->create($data2);
             $product_id = $reslut->id;
 
-            // if ($request['categories']) {
-            //     $categories = $request['categories'];
-            //     foreach ($categories as $category) {
-            //         $this->productRepository->createCategoryProduct(
-            //             [
-            //                 'product_id' => $product_id,
-            //                 'category_id' => $category
-            //             ]
-            //         );
-            //     }
-            // }
+            if ($request['categories']) {
+                $product = Product::find($product_id);
+                $categories = $request['categories'];
+                foreach ($categories as $category) {
+                    $product->categories()->attach($category);
+                    // $this->productRepository->createCategoryProduct(
+                    //     [
+                    //         'product_id' => $product_id,
+                    //         'category_id' => $category
+                    //     ]
+                    // );
+                }
+            }
             if ($request->hasfile('images')) {
                 $uploadPath = 'storage/uploads/';
                 $images = $request->file('images');
@@ -54,6 +60,24 @@ class ProductService
                             'product_img' => $path_name
                         ]
                     );
+                }
+            }
+            if ($request['sizes']) {
+                $sizes = $request['sizes'];
+                foreach ($sizes as $size) {
+                    AttributeProduct::create([
+                        'product_id' => $product_id,
+                        'attribute_value_id' => $size
+                    ]);
+                }
+            }
+            if ($request['colors']) {
+                $colors = $request['colors'];
+                foreach ($colors as $color) {
+                    AttributeProduct::create([
+                        'product_id' => $product_id,
+                        'attribute_value_id' => $color
+                    ]);
                 }
             }
             DB::commit();
@@ -82,5 +106,19 @@ class ProductService
     public function updateProduct(array $data, $id)
     {
         return $this->productRepository->update($data, $id);
+    }
+
+    public function getAttribute($params, $id)
+    {
+        $data = DB::table('products as p')
+            ->join('attribute_products as ap', 'p.id', '=', 'ap.product_id')
+            ->join('attribute_values as av', 'ap.attribute_value_id', '=', 'av.id')
+            ->join('attributes as a', 'a.id', '=', 'av.attribute_id')
+            ->where('a.name', '=', $params)
+            ->where('p.id', '=', $id)
+            ->select('av.value_name')
+            ->get();
+
+        return $data;
     }
 }

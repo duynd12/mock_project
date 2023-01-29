@@ -10,6 +10,7 @@ use Helmesvs\Notify\Facades\Notify;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Attribute;
+use App\Models\Category;
 use App\Repositories\AttributeRepository;
 use Illuminate\Support\Facades\DB;
 
@@ -44,24 +45,13 @@ class ProductController extends Controller
      */
     public function create()
     {
-        // $color_value = Attribute::with('attributeValues')->where('name', 'color')->get();
-        // $size_value = Attribute::with('attributeValues')->where('name', 'size')->get();
-        // foreach ($color_value as $color) {
-        //     var_dump($color);
-        // }
-        // // dd($color_value);
-        // $data = DB::table('attributes')
-        //     ->join('attribute_values', 'attributes.id', '=', 'attribute_values.attribute_id')
-        //     ->where('attributes.name', '=', 'size')
-        //     ->select('attributes.id', 'attributes.name', 'attribute_values.value_name')
-        //     ->get();
-
+        $categories  = Category::all();
         $color_values = $this->attributeRepository->getAttributeValue('color');
         $size_values = $this->attributeRepository->getAttributeValue('size');
         return view('products.addProduct', [
+            'categories' => $categories,
             'colors' => $color_values,
             'sizes' => $size_values
-            // 'sizes' => $data
         ]);
     }
 

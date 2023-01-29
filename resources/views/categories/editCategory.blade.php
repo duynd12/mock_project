@@ -14,8 +14,8 @@
     </div>
     <label for="cars" style="margin-bottom:10px;">Sản phẩm : </label>
     <select name="products[]" id="cars" multiple multiselect-hide-x="true">
-        @foreach($data['product_name'] as $product)
-            <option selected value="{{$product->id}}">{{$product->name}}</option>
+        @foreach($products as $product)
+            <option {{$data->products->contains('id',$product->id) ? "selected":""}} value="{{$product->id}}">{{$product->name}}</option>
         @endforeach
         @error('categories')
         <span style="color:red">{{$message}}</span>

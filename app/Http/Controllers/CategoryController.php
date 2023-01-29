@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Product;
 use App\Repositories\CategoryRepository;
 use Helmesvs\Notify\Facades\Notify;
 use Illuminate\Http\Request;
@@ -70,7 +71,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-
+        $products = Product::all();
+        // dd($products);
         $data = $this->categoryRepository->find($id);
         $data['product_name'] = DB::table('category_products as cp')
             ->join('categories as c', 'c.id', '=', 'cp.category_id')
@@ -81,7 +83,11 @@ class CategoryController extends Controller
             // ->keyBy('name')
             ->toArray();
         // dd($data);
-        return view('categories.editCategory', ['data' => $data]);
+        // dd($data);
+        return view('categories.editCategory', [
+            'data' => $data,
+            'products' => $products
+        ]);
     }
 
     /**
@@ -106,16 +112,31 @@ class CategoryController extends Controller
         foreach ($data as $key => $value) {
             $array[] = $key;
         };
-        $diff_array = array_diff($array, $data2['products']);
-        foreach ($diff_array as $d) {
-            if (in_array($d, $array)) {
 
-                // xoa san pham
-                echo "co danh muc do";
+        $categories = Category::find($id);
+        foreach ($array as $value) {
+            // xoa product_id in pivot table
+            if (!in_array($value, $data2['products'])) {
+                $categories->products()->detach($value);
             }
-
-            // them san pham
         }
+
+        foreach ($data2['products'] as $value) {
+            // xoa product_id in pivot table
+            if (!in_array($value, $array)) {
+                $categories->products()->attach($value);
+            }
+        }
+        // // dd($categories);
+        // dd($diff_array);
+        // foreach ($diff_array as $d) {
+        //     if (in_array($d, $array)) {
+        //         // xoa san pham
+        //         $categories->products()->detach($d);
+        //     }
+        //     $categories->products()->attach($d);
+        //     // them san pham
+        // }
         // dd($data);
         // dd($array_diff($data['pro']))
         // foreach ($data2['products'] as $key => $value) {
