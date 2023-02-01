@@ -86,7 +86,12 @@ class ProductController extends Controller
     public function edit($id)
     {
         $data = $this->productService->getProductById($id);
-        return view('products.editProduct', ['data' => $data]);
+        $categories = Category::all();
+        // dd($data);
+        return view('products.editProduct', [
+            'data' => $data,
+            'categories' => $categories
+        ]);
     }
 
     /**
@@ -99,14 +104,15 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
+
         $result = $this->productService->updateProduct($data, $id);
-        if ($result) {
-            Notify::success('Sửa sản phẩm thành công', $title = null, $options = []);
-            return redirect()->route('product.index');
-        } else {
-            Notify::error('Sửa sản phẩm thất bại', $title = null, $options = []);
-            return redirect()->route('product.edit', $id);
-        }
+        // if ($result) {
+        //     Notify::success('Sửa sản phẩm thành công', $title = null, $options = []);
+        //     return redirect()->route('product.index');
+        // } else {
+        //     Notify::error('Sửa sản phẩm thất bại', $title = null, $options = []);
+        //     return redirect()->route('product.edit', $id);
+        // }
     }
 
     /**

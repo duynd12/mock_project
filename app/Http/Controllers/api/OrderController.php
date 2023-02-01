@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Profile;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
-class ProfileController extends Controller
+class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,6 +17,8 @@ class ProfileController extends Controller
     public function index()
     {
         $id = JWTAuth::user()->id;
+        $data = Order::with(['orderDetails'])->get()->find($id);
+        return response()->json(compact('data'));
     }
 
     /**
@@ -27,8 +29,7 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->all();
-        return Profile::create($data);
+        //
     }
 
     /**
@@ -49,34 +50,9 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        $user = JWTAuth::user();
-        $user_id = $user->id;
-        $data = $request->all();
-        // return response()->json($data);
-        $result = Profile::where('user_id', '=', $user_id)->update(
-            [
-                'name' => $data['name'],
-                'numberPhone' => $data['numberPhone'],
-                'address' => $data['address'],
-                'gender' => $data['gender'],
-                'dob' => $data['dob'],
-            ]
-        );
-        if ($result) {
-            return response()->json(
-                [
-                    'message' => 'update success'
-                ]
-            );
-        } else {
-            return response()->json(
-                [
-                    'message' => 'update fail'
-                ]
-            );
-        }
+        //
     }
 
     /**

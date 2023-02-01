@@ -105,7 +105,41 @@ class ProductService
     }
     public function updateProduct(array $data, $id)
     {
-        return $this->productRepository->update($data, $id);
+        $array = [];
+        $product = Product::find($id);
+        $data2 = DB::table('category_products as cp')
+            ->join('categories as c', 'c.id', '=', 'cp.category_id')
+            ->join('products as p', 'p.id', '=', 'cp.product_id')
+            ->where('p.id', '=', $id)
+            ->select('c.id')
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+        $categories = $data['categories'];
+        // dd($categories);
+        foreach ($data2 as $key => $value) {
+            $array[] = $key;
+        }
+        // dd($array);
+
+        foreach ($array as $value) {
+            if (!in_array($value, $categories)) {
+                // echo $value;
+                $product->categories->detach($value);
+            }
+        }
+        foreach ($categories as $category) {
+            if (!in_array($category, $array)) {
+                // echo "chua co danh muc do" . $category;
+                $product->categories()->attach($category);
+            }
+        };
+        $this->productRepository->update([
+            'name' => $data['name'],
+            'price' => $data['price'],
+            'description' => $data['description'],
+            'quantity' => $data['quantity'],
+        ], $id);
     }
 
     public function getAttribute($params, $id)

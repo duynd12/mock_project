@@ -31,7 +31,7 @@ class ProductController extends Controller
         // $data = Product::paginate(\App\Constants\Product::PRODUCT_LIST_LIMIT);
 
         // $data = $this->productRepository->all();
-        $data = Product::with(['images', 'categories'])->get();
+        $data = Product::with(['images', 'categories'])->paginate(2);
         return response()->json($data);
     }
 
@@ -54,7 +54,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $data = Product::with(['images', 'attributes'])->get()->find($id);
+        $data = Product::with(['images'])->get()->find($id);
         $data['sizes'] = $this->productService->getAttribute('size', $id);
         $data['colors'] = $this->productService->getAttribute('color', $id);
         // $data2 = Product::with('attributes')->get()->find($id);
@@ -83,5 +83,16 @@ class ProductController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function searchProduct($product_name)
+    {
+        $data = Product::with(['images'])
+            ->where('name', 'LIKE', '%' . $product_name . '%')
+            ->get();
+        if (count($data)) {
+            return response()->json($data);
+        } else {
+            return response()->json(['Data' => 'No Data not found'], 404);
+        }
     }
 }

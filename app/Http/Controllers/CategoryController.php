@@ -112,7 +112,9 @@ class CategoryController extends Controller
         foreach ($data as $key => $value) {
             $array[] = $key;
         };
-
+        dd($array);
+        $array_data = $request->all();
+        // dd($array_data);
         $categories = Category::find($id);
         foreach ($array as $value) {
             // xoa product_id in pivot table
@@ -127,34 +129,11 @@ class CategoryController extends Controller
                 $categories->products()->attach($value);
             }
         }
-        // // dd($categories);
-        // dd($diff_array);
-        // foreach ($diff_array as $d) {
-        //     if (in_array($d, $array)) {
-        //         // xoa san pham
-        //         $categories->products()->detach($d);
-        //     }
-        //     $categories->products()->attach($d);
-        //     // them san pham
-        // }
-        // dd($data);
-        // dd($array_diff($data['pro']))
-        // foreach ($data2['products'] as $key => $value) {
-        //     if (in_array($key, $data['product_name'])) {
-        //         echo $key;      
-        //         echo "true";
-        //     }
-        //     // $array[] = $key;
-        // }
-        // dd($array);
-        // foreach ($data['products'] as $key => $value) {
-        //     echo $value;
-        // }
-        // foreach($data2['products'] as $key => $value){
-        //     if(in_array($key,))
-        // }
-        // $diffarray = array_diff($data, $data2);
-        // dd($diffarray);
+
+        $this->categoryRepository->update([
+            'title' => $array_data['title'],
+            'parentId' => $array_data['parentId']
+        ], $id);
     }
 
     /**

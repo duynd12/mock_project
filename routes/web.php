@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\OrderController;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
@@ -24,6 +25,10 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
+// Route::get('/123', function () {
+//     dd(1);
+//     return view('index');
+// });
 Route::controller(ProductController::class)->group(function () {
     Route::get('/product-manager', 'index')->name('product.index');
     Route::get('/them-san-pham', 'create')->name('product.create');
@@ -49,29 +54,36 @@ Route::controller(AttributeController::class)->group(function () {
     Route::get('/deleteAttribute/{id}', 'destroy')->name('attribute.destroy');
     Route::get('/them-thuoc-tinh', 'create')->name('attribute.create');
 });
+Route::get('orders', [OrderController::class, 'index']);
 Route::get('/', [HomeController::class, 'index'])->name('home.index');
 // Route::get('/quan-ly-thuoc-tinh', [AttributeController::class, 'index'])->name('attribute.index');
-Route::get('/test', function () {
-    $data['product_name'] = DB::table('category_products as cp')
-        ->join('categories as c', 'c.id', '=', 'cp.category_id')
-        ->join('products as p', 'p.id', '=', 'cp.product_id')
-        ->where('c.id', '=', 1)
-        ->select('p.id')
-        ->get()
-        ->keyBy('id')
-        ->toArray();
-    // foreach ($data as $d) {
-    //     // dd($d);
-    //     array_push($array, $d);
-    // }    
-    // dd($data);
-    // $data2 = $request->only('products');
 
-    // foreach ($data['product_name'] as $key => $val) {
-    //     array_push($array, $d);
-    // }
-    // dd($data);
-    // dd($data2);
-    // $diffarray = array_diff($data, $data2);
-    // dd($diffarray);
+// Route::get('/test', function () {
+//     $data['product_name'] = DB::table('category_products as cp')
+//         ->join('categories as c', 'c.id', '=', 'cp.category_id')
+//         ->join('products as p', 'p.id', '=', 'cp.product_id')
+//         ->where('c.id', '=', 1)
+//         ->select('p.id')
+//         ->get()
+//         ->keyBy('id')
+//         ->toArray();
+//     // foreach ($data as $d) {
+//     //     // dd($d);
+//     //     array_push($array, $d);
+//     // }    
+//     // dd($data);
+//     // $data2 = $request->only('products');
+
+//     // foreach ($data['product_name'] as $key => $val) {
+//     //     array_push($array, $d);
+//     // }
+//     // dd($data);
+//     // dd($data2);
+//     // $diffarray = array_diff($data, $data2);
+//     // dd($diffarray);
+// });
+
+Route::group(['middleware' => ['jwt.verify']], function () {
+    // Route::get('user', [UserController::class, 'getAuthenticatedUser']);
+    Route::get('orders', [OrderController::class, 'index']);
 });
