@@ -16,7 +16,7 @@ class UserController extends Controller
     {
         $this->userService = $_userService;
     }
-    public function register(UserRequest $request)
+    public function register(Request $request)
     {
         return $this->userService->register($request);
     }

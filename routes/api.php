@@ -33,7 +33,7 @@ Route::post('login', [UserController::class, 'login']);
 Route::get('logout', [UserController::class, 'logout']);
 
 
-Route::post('login', [UserController::class, 'login']);
+// Route::post('login', [UserController::class, 'login']);
 
 Route::get('products', [ProductController::class, 'index']);
 // Route::get('orders', [OrderController::class, 'index']);
