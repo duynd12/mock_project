@@ -42,7 +42,7 @@ Route::get('products/{id}', [ProductController::class, 'show']);
 Route::get('search', [ProductController::class, 'searchProduct']);
 
 Route::get('categories', [CategoryController::class, 'index']);
-Route::get('{categories}', [CategoryController::class, 'show']);
+Route::get('categories/{id}', [CategoryController::class, 'show']);
 
 
 Route::group(['middleware' => ['jwt.verify']], function () {

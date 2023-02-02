@@ -18,25 +18,8 @@ class CategoryController extends Controller
     public function index()
     {
         $data = Category::with('products')->get();
-        // foreach ($data as $key => $value) {
-        //     foreach ($value as $product) {
-        //         echo $product;
-        //     }
-        // echo $data[$key]['products'];
-        // $data[$key]['products'] = Product::with(['images'])->get()->find($value->id);
-        $products = Product::with(['images'])->get();
-        // }
-        // $data['products'] = Product::with(['images'])->get()->find(1);
-        // $data = DB::table('category_products as cp')
-        //     ->join('categories as c', 'cp.category_id', '=', 'c.id')
-        //     ->join('products as p', 'p.id', '=', 'cp.product_id')
-        //     ->join('images as i', 'i.product_id', '=', 'p.id')
-        //     ->select('c.*', 'i.product_img')
-        //     ->get();
-
         return response()->json([
             'data' => $data,
-            'products' => $products
         ]);
     }
 
@@ -59,8 +42,11 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $data = Category::with('products')->where('title', $id)->get();
-        return response()->json($data);
+        $data = Category::find($id)->products->pluck('id');
+        $products = Product::with('images')->whereIn('id', $data)->get();
+        return response()->json([
+            'data' => $products,
+        ]);
     }
 
     /**
