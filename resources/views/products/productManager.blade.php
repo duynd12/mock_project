@@ -4,6 +4,10 @@
 <div class="product-manager">
     <div class="product-manager-title">
         <h1>Quản lý sản phẩm</h1>
+        <form action="{{route('category.index')}}" method="get">
+            <input type="text" name="search">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
         <button class="btn btn-primary">
             <a href="{{route('product.create')}}" style="color:white">
                 Thêm sản phẩm

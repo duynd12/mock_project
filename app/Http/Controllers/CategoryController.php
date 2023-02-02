@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Repositories\CategoryRepository;
+use App\Services\CategoryService;
 use Helmesvs\Notify\Facades\Notify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,10 +13,14 @@ use Illuminate\Support\Facades\DB;
 class CategoryController extends Controller
 {
     private $categoryRepository;
+    private $categoryService;
 
-    public function __construct(CategoryRepository $_categoryRepository)
-    {
+    public function __construct(
+        CategoryRepository $_categoryRepository,
+        CategoryService $_categoryService
+    ) {
         $this->categoryRepository = $_categoryRepository;
+        $this->categoryService = $_categoryService;
     }
 
     public function index()
@@ -99,41 +104,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $array = [];
-        $data = DB::table('category_products as cp')
-            ->join('categories as c', 'c.id', '=', 'cp.category_id')
-            ->join('products as p', 'p.id', '=', 'cp.product_id')
-            ->where('c.id', '=', $id)
-            ->select('p.id')
-            ->get()
-            ->keyBy('id')
-            ->toArray();
-        $data2 = $request->only('products');
-        foreach ($data as $key => $value) {
-            $array[] = $key;
-        };
-        dd($array);
-        $array_data = $request->all();
-        // dd($array_data);
-        $categories = Category::find($id);
-        foreach ($array as $value) {
-            // xoa product_id in pivot table
-            if (!in_array($value, $data2['products'])) {
-                $categories->products()->detach($value);
-            }
-        }
-
-        foreach ($data2['products'] as $value) {
-            // xoa product_id in pivot table
-            if (!in_array($value, $array)) {
-                $categories->products()->attach($value);
-            }
-        }
-
-        $this->categoryRepository->update([
-            'title' => $array_data['title'],
-            'parentId' => $array_data['parentId']
-        ], $id);
+        $this->categoryService->updateCategory($request, $id);
+        return redirect()->route('category.edit', $id);
     }
 
     /**

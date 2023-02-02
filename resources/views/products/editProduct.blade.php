@@ -21,6 +21,26 @@
         @enderror
     </select>
     <div class="form-group">
+        <!-- <input type="text" id="exampleInputEmail1" name="product_id" /> -->
+        <label for="exampleInputEmail1">Màu sắc : </label>
+        <div class="checkbox">
+            @foreach($colors as $color)
+                <input type="checkbox" {{$data['colors']->contains('id',$color->id) ? "checked":""}} value="{{ $color->id}}"name="colors[]" multiple="true" />
+            {{$color->value_name}}
+            @endforeach
+        </div>
+    </div>
+    <div class="form-group">
+        <!-- <input type="text" id="exampleInputEmail1" name="product_id" /> -->
+        <label for="exampleInputEmail1">Size : </label>
+        <div class="checkbox">
+            @foreach($sizes as $size)
+                <input type="checkbox" {{$data['sizes']->contains('id',$size->id) ? "checked":""}} value="{{ $size->id}}"name="sizes[]" multiple="true" />
+            {{$size->value_name}}
+            @endforeach
+        </div>
+    </div>
+    <div class="form-group">
         <label for="exampleInputEmail1">Giá : </label>
         <input type="text" class="form-control" id="exampleInputEmail1" name="price" value="{{$data['price']}}">
     @error('price')
@@ -43,6 +63,7 @@
         <span style="color:red">{{$message}}</span>
         @enderror
     </div>
+   
     
 
     <button type="submit" class="btn btn-primary">Submit</button>

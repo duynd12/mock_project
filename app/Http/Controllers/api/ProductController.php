@@ -32,7 +32,9 @@ class ProductController extends Controller
 
         // $data = $this->productRepository->all();
         $data = Product::with(['images', 'categories'])->paginate(2);
-        return response()->json($data);
+        return response()->json([
+            'data' => $data,
+        ]);
     }
 
     /**
@@ -57,9 +59,10 @@ class ProductController extends Controller
         $data = Product::with(['images'])->get()->find($id);
         $data['sizes'] = $this->productService->getAttribute('size', $id);
         $data['colors'] = $this->productService->getAttribute('color', $id);
-        // $data2 = Product::with('attributes')->get()->find($id);
-        // $data['attributes'] = $data2['attributes'];
-        return response()->json($data);
+
+        return response()->json([
+            'data' => $data,
+        ]);
     }
 
     /**
@@ -84,10 +87,11 @@ class ProductController extends Controller
     {
         //
     }
-    public function searchProduct($product_name)
+    public function searchProduct(Request $request)
     {
+        $param = $request->input('param');
         $data = Product::with(['images'])
-            ->where('name', 'LIKE', '%' . $product_name . '%')
+            ->where('name', 'LIKE', '%' . $param . '%')
             ->get();
         if (count($data)) {
             return response()->json($data);

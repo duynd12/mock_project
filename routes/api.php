@@ -39,7 +39,7 @@ Route::get('products', [ProductController::class, 'index']);
 // Route::get('orders', [OrderController::class, 'index']);
 
 Route::get('products/{id}', [ProductController::class, 'show']);
-Route::get('search/{product_name}', [ProductController::class, 'searchProduct']);
+Route::get('search', [ProductController::class, 'searchProduct']);
 
 Route::get('categories', [CategoryController::class, 'index']);
 Route::get('{categories}', [CategoryController::class, 'show']);

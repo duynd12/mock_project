@@ -87,9 +87,34 @@ class ProductController extends Controller
     {
         $data = $this->productService->getProductById($id);
         $categories = Category::all();
-        // dd($data);
+        $colors = DB::table('attribute_values as av')
+            ->join('attributes as a', 'av.attribute_id', '=', 'a.id')
+            ->where('a.name', '=', 'color')
+            ->select('av.id', 'av.value_name')
+            ->get();
+        $sizes = DB::table('attribute_values as av')
+            ->join('attributes as a', 'av.attribute_id', '=', 'a.id')
+            ->where('a.name', '=', 'size')
+            ->select('av.id', 'av.value_name')
+            ->get();
+        $data['colors'] = DB::table('products as p')
+            ->join('attribute_products as ap', 'p.id', '=', 'ap.product_id')
+            ->join('attribute_values as av', 'ap.attribute_value_id', '=', 'av.id')
+            ->join('attributes as a', 'a.id', '=', 'av.attribute_id')
+            ->where('a.name', '=', 'color')
+            ->select('av.id', 'av.value_name')
+            ->get();
+        $data['sizes'] = DB::table('products as p')
+            ->join('attribute_products as ap', 'p.id', '=', 'ap.product_id')
+            ->join('attribute_values as av', 'ap.attribute_value_id', '=', 'av.id')
+            ->join('attributes as a', 'a.id', '=', 'av.attribute_id')
+            ->where('a.name', '=', 'size')
+            ->select('av.id', 'av.value_name')
+            ->get();
         return view('products.editProduct', [
             'data' => $data,
+            'colors' => $colors,
+            'sizes' => $sizes,
             'categories' => $categories
         ]);
     }
@@ -104,15 +129,9 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-
-        $result = $this->productService->updateProduct($data, $id);
-        // if ($result) {
-        //     Notify::success('Sửa sản phẩm thành công', $title = null, $options = []);
-        //     return redirect()->route('product.index');
-        // } else {
-        //     Notify::error('Sửa sản phẩm thất bại', $title = null, $options = []);
-        //     return redirect()->route('product.edit', $id);
-        // }
+        dd($data);
+        $this->productService->updateProduct($data, $id);
+        return redirect()->route('product.edit', $id);
     }
 
     /**

@@ -9,6 +9,7 @@ class Attribute extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['id', 'name'];
     public function products()
     {
         return $this->belongsToMany(Product::class, 'attribute_products')->select('value_name');

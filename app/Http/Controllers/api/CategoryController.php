@@ -4,7 +4,9 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CategoryController extends Controller
 {
@@ -16,7 +18,26 @@ class CategoryController extends Controller
     public function index()
     {
         $data = Category::with('products')->get();
-        return response()->json($data);
+        // foreach ($data as $key => $value) {
+        //     foreach ($value as $product) {
+        //         echo $product;
+        //     }
+        // echo $data[$key]['products'];
+        // $data[$key]['products'] = Product::with(['images'])->get()->find($value->id);
+        $products = Product::with(['images'])->get();
+        // }
+        // $data['products'] = Product::with(['images'])->get()->find(1);
+        // $data = DB::table('category_products as cp')
+        //     ->join('categories as c', 'cp.category_id', '=', 'c.id')
+        //     ->join('products as p', 'p.id', '=', 'cp.product_id')
+        //     ->join('images as i', 'i.product_id', '=', 'p.id')
+        //     ->select('c.*', 'i.product_img')
+        //     ->get();
+
+        return response()->json([
+            'data' => $data,
+            'products' => $products
+        ]);
     }
 
     /**
