@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['id', 'name', 'price', 'description', 'quantity'];
+    protected $fillable = ['id', 'name', 'price', 'discount', 'description', 'quantity'];
 
     // public function attributes()
     // {
@@ -25,8 +25,9 @@ class Product extends Model
     }
     public function attributes()
     {
-        return $this->belongsToMany(AttributeValue::class, 'attribute_products');
+        return $this->belongsToMany(AttributeValue::class, 'attribute_products', 'product_id', 'attribute_value_id', 'id');
     }
+
     public function getAttr($params = 'color', $id = '16')
     {
         $data = DB::table('products as p')

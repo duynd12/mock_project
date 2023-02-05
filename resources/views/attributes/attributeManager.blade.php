@@ -9,18 +9,15 @@
             <input type="text" name="search">
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
-        <button class="btn btn-primary">
-            <a href="{{route('attribute.create')}}" style="color:white">
-                Thêm  thuộc tính 
-            </a>
-        </button>
-        <button class="btn btn-primary">
-            <a href="{{route('attribute.create')}}" style="color:white">
-                Quản lý  thuộc tính 
-            </a>
-        </button>
+        <div class="button" style="float: right;">
+            <button class="btn btn-outline-primary">
+                <a href="{{route('attribute.create')}}">
+                    Thêm  thuộc tính 
+                </a>
+            </button>
+        </div>
     </div>
-    <table class="table">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th scope="col">id</th>
@@ -36,6 +33,11 @@
                 <td>{{$attr['name']}}</td>
                 
                 <td>
+                    <button class="btn btn-outline-primary">
+                        <a href="{{route('attribute.show',$attr['id']) }}" >
+                            Xem chi tiết
+                        </a>
+                    </button>
                     <button class="btn btn-primary">
                         <a href="{{route('attribute.edit',$attr['id']) }}" style="color:white">
                             Edit

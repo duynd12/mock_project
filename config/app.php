@@ -196,8 +196,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,
         // package helmesvs
-        Helmesvs\Notify\NotifyServiceProvider::class
-
+        Helmesvs\Notify\NotifyServiceProvider::class,
+        Fx3costa\LaravelChartJs\Providers\ChartjsServiceProvider::class
     ],
 
     /*

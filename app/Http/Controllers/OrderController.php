@@ -2,33 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Attribute;
-use App\Repositories\AttributeRepository;
-use App\Services\AttributeService;
+use App\Models\Order;
+use App\Models\Ship;
+use App\Models\User;
+use App\Constants\Order as orderContants;
+use App\Repositories\OrderRepository;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
-class AttributeController extends Controller
+class OrderController extends Controller
 {
+
+
+    private $orderRepository;
+    private $orderService;
+    public function __construct(
+        OrderRepository $_orderRepository,
+        OrderService $_orderService
+    ) {
+        $this->orderRepository = $_orderRepository;
+        $this->orderService = $_orderService;
+    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    private $attributeService;
-    public function __construct(AttributeService $_attributeService)
-    {
-        $this->attributeService = $_attributeService;
-    }
+
     public function index()
     {
-        $data = Attribute::paginate(5);
-        // dd($data);
-        return view('attributes.attributeManager', ['data' => $data]);
+        $data = $this->orderRepository->all();
+        return view('orders.orderManager', ['orders' => $data]);
     }
-    public function create()
-    {
-        return view('attributes.addAttribute');
-    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -37,8 +44,7 @@ class AttributeController extends Controller
      */
     public function store(Request $request)
     {
-        $this->attributeService->createAttribute($request);
-        return redirect()->route('attribute.create');
+        //
     }
 
     /**
@@ -49,9 +55,8 @@ class AttributeController extends Controller
      */
     public function show($id)
     {
-        $data = Attribute::with(['attributeValues'])->find($id);
-        // dd($data);
-        return view('attributes.AttributeValueManager', ['data' => $data]);
+        $data = $this->orderService->getOrderById($id);
+        return view('orders.orderDetail', $data);
     }
 
     /**

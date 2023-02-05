@@ -74,4 +74,14 @@ class BaseRepository implements BaseRepositoryInterface
     {
         return $this->model->destroy($id);
     }
+
+    /**
+     * Delete a entity in repository by id
+     *
+     * @param array
+     */
+    public function searchWithTime($array)
+    {
+        return $this->model->whereBetween('order_date', $array)->get();
+    }
 }

@@ -1,12 +1,17 @@
 <?php
 
-use App\Http\Controllers\api\OrderController;
+use App\Http\Controllers\AdminContrller;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\StatisticController;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -22,13 +27,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::get('/', function () {
-    return view('index');
-});
-// Route::get('/123', function () {
-//     dd(1);
+// Route::get('/', function () {
 //     return view('index');
-// });
+// })->name('dashboard');
+
+// Route::middleware('checklogin')->group(function () {
+
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
+
 Route::controller(ProductController::class)->group(function () {
     Route::get('/product-manager', 'index')->name('product.index');
     Route::get('/them-san-pham', 'create')->name('product.create');
@@ -53,37 +59,92 @@ Route::controller(AttributeController::class)->group(function () {
     Route::post('/attribute', 'store')->name('attribute.store');
     Route::get('/deleteAttribute/{id}', 'destroy')->name('attribute.destroy');
     Route::get('/them-thuoc-tinh', 'create')->name('attribute.create');
+    Route::get('/chi-tiet-thuoc-tinh/{id}', 'show')->name('attribute.show');
 });
-Route::get('orders', [OrderController::class, 'index']);
-Route::get('/', [HomeController::class, 'index'])->name('home.index');
-// Route::get('/quan-ly-thuoc-tinh', [AttributeController::class, 'index'])->name('attribute.index');
+Route::get('orders', [OrderController::class, 'index'])->name('order.index');
+Route::get('thong-ke', [StatisticController::class, 'index'])->name('statistic.index');
 
-// Route::get('/test', function () {
-//     $data['product_name'] = DB::table('category_products as cp')
-//         ->join('categories as c', 'c.id', '=', 'cp.category_id')
-//         ->join('products as p', 'p.id', '=', 'cp.product_id')
-//         ->where('c.id', '=', 1)
-//         ->select('p.id')
-//         ->get()
-//         ->keyBy('id')
-//         ->toArray();
-//     // foreach ($data as $d) {
-//     //     // dd($d);
-//     //     array_push($array, $d);
-//     // }    
-//     // dd($data);
-//     // $data2 = $request->only('products');
+Route::get('chi-tiet-don-hang/{id}', [OrderController::class, 'show'])->name('order.show');
+// });
+Route::controller(AdminContrller::class)->group(function () {
+    Route::get('admin/login', 'create')->name('admin.create');
+    Route::get('admin/register', 'createRegister')->name('admin.createRegister');
+    Route::post('admin/login', 'login')->name('admin.login');
+    Route::post('admin/register', 'store')->name('admin.store');
+    Route::get('admin/logout', 'logout')->name('admin.logout');
+});
 
-//     // foreach ($data['product_name'] as $key => $val) {
-//     //     array_push($array, $d);
-//     // }
-//     // dd($data);
-//     // dd($data2);
-//     // $diffarray = array_diff($data, $data2);
-//     // dd($diffarray);
+
+
+Route::get('test', function () {
+    $data = DB::table('order_details as od')
+        ->join('products as p', 'od.product_id', '=', 'p.id')
+        ->groupBy('od.product_id', 'p.name')
+        ->select('od.product_id', 'p.name', DB::raw('SUM(od.quantity) as total_quantity'))
+        ->get()
+        // ->first();
+        ->toArray();
+    // dd($data);
+
+
+    $max_quantity = array_reduce($data, function ($carry, $item) {
+        return max($carry, $item->total_quantity);
+    });
+    $array = [];
+    foreach ($data as $product) {
+        if ($product->total_quantity == $max_quantity) {
+            $array[] = $product;
+        }
+    }
+    dd($array);
+    // $products = Product::find($data->product_id);
+    // dd($products);
+
+    // dd($max_quantity);
+    // return max($max_quantity);
+    // return $data;
+});
+// Route::get('userbuy', function () {
+//     $bestCustomer = DB::table('orders')
+//         ->select('user_id', DB::raw('SUM(total_price) as total_spending'))
+//         ->groupBy('user_id')
+//         ->orderBy('total_spending', 'desc')
+//         ->first();
+//     $bestCustomerUser = DB::table('users as u')
+//         ->join('profiles as p', 'p.user_id', '=', 'u.id')
+//         ->where('id', $bestCustomer->user_id)->first();
+//     dd($bestCustomer);
 // });
 
-Route::group(['middleware' => ['jwt.verify']], function () {
-    // Route::get('user', [UserController::class, 'getAuthenticatedUser']);
-    Route::get('orders', [OrderController::class, 'index']);
+// Route::get('ordertoday', function (Request $request) {
+//     // dd($request);
+//     $start_date = Carbon::parse($request->start_date);
+//     $end_date = Carbon::parse($request->end_date);
+
+//     $orders = Order::whereBetween('created_at', [$start_date, $end_date])->get();
+//     dd($orders);
+//     // dd(Carbon::today());
+//     // $orders = Order::whereDate('order_date', Carbon::today())->get();
+//     // dd($orders);
+// });
+
+Route::get('test1', function () {
+    $data =  DB::table('orders')
+        ->selectRaw(" count(id) as So_luong_da_ban,
+	CASE
+    	WHEN DAYOFWEEK(order_date) = '1' THEN 'Sunday'
+        WHEN DAYOFWEEK(order_date) = '2' THEN 'Monday'
+        WHEN DAYOFWEEK(order_date) = '3' THEN 'Tuesday'
+        WHEN DAYOFWEEK(order_date) = '4' THEN 'Wednesday'
+        WHEN DAYOFWEEK(order_date) = '5' THEN 'Thursday'
+        WHEN DAYOFWEEK(order_date) = '6' THEN 'Friday'
+        WHEN DAYOFWEEK(order_date) = '7' THEN 'Saturday'
+        ELSE 'not a day of week'
+    END AS day_of_week
+    ")
+        ->groupBy('day_of_week')
+        ->get()
+        ->toArray();
+
+    dd($data);
 });

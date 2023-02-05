@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('admins', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-            $table->integer('parentId');
+            $table->string('username');
+            $table->string('password');
+            $table->string('rule')->default('Admin');
+            $table->index(['username', 'password']);
             $table->timestamps();
-            $table->index(['id', 'title']);
         });
     }
 
@@ -29,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('admins');
     }
 };

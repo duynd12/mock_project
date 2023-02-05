@@ -17,9 +17,11 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();;
             $table->float('price');
-            $table->string('description');
+            $table->float('discount')->default(0);
+            $table->longText('description');
             $table->integer('quantity');
             $table->timestamps();
+            $table->index(['id', 'name', 'price']);
         });
     }
 

@@ -63,7 +63,10 @@
         <span style="color:red">{{$message}}</span>
         @enderror
     </div>
-   
+   <div class="form-group">
+        <label for="exampleInputEmail1">Giảm Giá : </label>
+        <input type="text" class="form-control" id="exampleInputEmail1" name="discount">
+    </div>
     
 
     <button type="submit" class="btn btn-primary">Submit</button>

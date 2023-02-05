@@ -22,6 +22,7 @@ return new class extends Migration
             $table->text('avatar')->nullable();
             $table->date('dob')->nullable();
             $table->timestamps();
+            $table->index(['user_id']);
         });
     }
 

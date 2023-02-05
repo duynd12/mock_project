@@ -33,6 +33,8 @@ class ProductController extends Controller
     public function index()
     {
         $data = $this->productRepository->paginate(5);
+        // $data = Product::with(['images'])->get();
+        // dd($data);
         // $attribute_value = AttributeValue::all();
         // $data = Product::with(['images', 'attributes'])->get();
         return view('products.productManager', ['data' => $data]);
@@ -129,7 +131,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-        dd($data);
+        // dd($data);
         $this->productService->updateProduct($data, $id);
         return redirect()->route('product.edit', $id);
     }

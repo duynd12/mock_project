@@ -13,9 +13,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="{{asset('js/main.js')}}" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous" defer></script>
-
+        
     <link href="{{ asset('css/app.css') }}" rel="stylesheet" type="text/css">
-    <!-- Styles -->
+
 
 
 </head>
@@ -28,20 +28,23 @@
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li class="menu-title">Danh Mục</li><!-- /.menu-title -->
-                     <li class="menu-item-has-children1 dropdown">
-                        <a href="{{route('home.index')}}" aria-haspopup="true" aria-expanded="false">Danh mục</a>
+                    <li class="menu-item-has-children1 dropdown">
+                       <a href="{{route('home.index')}}" aria-haspopup="true" aria-expanded="false">Trang chủ</a>
+                   </li>
+                    <li class="menu-item-has-children1 dropdown">
+                        <a href="{{route('order.index')}}" aria-haspopup="true" aria-expanded="false">Quản lý đơn hàng</a>
                     </li>
                     <li class="menu-item-has-children1 dropdown">
                         <a href="{{route('product.index')}}" aria-haspopup="true" aria-expanded="false">Quản lý sản phẩm</a>
-                    </li>
-                    <li class="menu-item-has-children1 dropdown">
-                        <a href="{{route('product.index')}}" aria-haspopup="true" aria-expanded="false">Quản lý đơn hàng</a>
                     </li>
                     <li class="menu-item-has-children1 dropdown">
                         <a href="{{route('category.index')}}" aria-haspopup="true" aria-expanded="false">Quản lý danh mục</a>
                     </li>
                     <li class="menu-item-has-children1 dropdown">
                         <a href="{{route('attribute.index')}}" aria-haspopup="true" aria-expanded="false">Quản lý thuộc tính</a>
+                    </li>
+                    <li class="menu-item-has-children1 dropdown">
+                        <a href="{{route('statistic.index')}}" aria-haspopup="true" aria-expanded="false">Thống kê chung</a>
                     </li>
                     <li class="menu-item-has-children1 dropdown">
                         <a href="{{route('product.index')}}" aria-haspopup="true" aria-expanded="false">Đổi mật khẩu</a>
@@ -56,7 +59,7 @@
         <header id="header" class="header">
             <div class="top-left">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="./"><img src="images/logo.png" alt="Logo"></a>
+                    <a class="navbar-brand" href="./"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0ye438hFKtHXr85I6OrGFaH7pUCqkch_Q8w&usqp=CAU" alt="Logo" style="height:40px"></a>
                     <a class="navbar-brand hidden" href="./"><img src="images/logo2.png" alt="Logo"></a>
                     <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
                 </div>
@@ -77,7 +80,7 @@
 
                             <a class="nav-link" href="#"><i class="fa fa -cog"></i>Settings</a> -->
 
-                            <a class="nav-link" href=""><i class="fa fa-power -off"></i>Logout</a>
+                            <a class="nav-link" href="{{route('admin.logout')}}"><i class="fa fa-power -off"></i>Logout</a>
                         </div>
                     </div>
 
@@ -152,5 +155,6 @@
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </html>

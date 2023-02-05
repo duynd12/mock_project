@@ -25,11 +25,15 @@
     </div>
     <label for="floatingTextarea2">Mô tả : </label>
    <div class="form-floating">
-  <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" name="description"></textarea>
-</div>
+        <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" name="description"></textarea>
+   </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Số lượng còn : </label>
         <input type="text" class="form-control" id="exampleInputEmail1" name="quantity">
+    </div>
+     <div class="form-group">
+        <label for="exampleInputEmail1">Giảm Giá : </label>
+        <input type="text" class="form-control" id="exampleInputEmail1" name="discount">
     </div>
     <div class="form-group">
         <!-- <input type="text" id="exampleInputEmail1" name="product_id" /> -->

@@ -8,13 +8,13 @@
             <input type="text" name="search">
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
-        <button class="btn btn-primary">
-            <a href="{{route('category.create')}}" style="color:white">
+        <button class="btn btn-outline-primary">
+            <a href="{{route('category.create')}}">
                 Thêm danh mục
             </a>
         </button>
     </div>
-    <table class="table">
+    <table class="table table-bordered">
         <thead>
             <tr>
                 <th scope="col">id</th>

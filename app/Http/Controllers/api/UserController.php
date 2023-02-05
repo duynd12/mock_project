@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Requests\UserRequest;
 use Illuminate\Http\Request;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -14,6 +15,7 @@ class UserController extends Controller
     private $userService;
     public function __construct(UserService $_userService)
     {
+        Auth::setDefaultDriver('api');
         $this->userService = $_userService;
     }
     public function register(Request $request)

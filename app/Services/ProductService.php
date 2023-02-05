@@ -21,7 +21,21 @@ class ProductService
         $this->productRepository = $_productRepository;
         $this->imageRepository = $_imageRepository;
     }
+    public function getAttributeById($params, $id)
+    {
+        $data = DB::table('products as p')
+            ->join('attribute_products as ap', 'p.id', '=', 'ap.product_id')
+            ->join('attribute_values as av', 'ap.attribute_value_id', '=', 'av.id')
+            ->join('attributes as a', 'a.id', '=', 'av.attribute_id')
+            ->where('a.name', '=', $params)
+            ->where('p.id', '=', $id)
+            ->select('av.id')
+            ->get()
+            ->keyBy('id')
+            ->toArray();
 
+        return $data;
+    }
     public function createProduct($request)
     {
         try {
@@ -51,7 +65,7 @@ class ProductService
                 foreach ($images as $image) {
                     $extention = $image->getClientOriginalExtension();
                     $file_name = current(explode('.', $image->getClientOriginalName()));
-                    $path_name = $file_name . '.' . $extention;
+                    $path_name = time() . $file_name . '.' . $extention;
                     $image->move($uploadPath, $path_name);
 
                     $this->imageRepository->create(
@@ -105,46 +119,83 @@ class ProductService
     }
     public function updateProduct(array $data, $id)
     {
-        try {
-            $array = [];
-            $product = Product::find($id);
-            $data2 = DB::table('category_products as cp')
-                ->join('categories as c', 'c.id', '=', 'cp.category_id')
-                ->join('products as p', 'p.id', '=', 'cp.product_id')
-                ->where('p.id', '=', $id)
-                ->select('c.id')
-                ->get()
-                ->keyBy('id')
-                ->toArray();
-            $categories = $data['categories'];
-            // dd($categories);
-            foreach ($data2 as $key => $value) {
-                $array[] = $key;
-            }
-            // dd($array);
+        // try {
+        $array = [];
+        $product = Product::find($id);
+        $data2 = DB::table('category_products as cp')
+            ->join('categories as c', 'c.id', '=', 'cp.category_id')
+            ->join('products as p', 'p.id', '=', 'cp.product_id')
+            ->where('p.id', '=', $id)
+            ->select('c.id')
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+        // dd($data);
+        $categories = $data['categories'];
+        $new_colors = $data['colors'];
+        $new_sizes = $data['sizes'];
 
-            foreach ($array as $value) {
-                if (!in_array($value, $categories)) {
-                    // echo $value;
-                    $product->categories->detach($value);
-                }
-            }
-            foreach ($categories as $category) {
-                if (!in_array($category, $array)) {
-                    // echo "chua co danh muc do" . $category;
-                    $product->categories()->attach($category);
-                }
-            };
-            $this->productRepository->update([
-                'name' => $data['name'],
-                'price' => $data['price'],
-                'description' => $data['description'],
-                'quantity' => $data['quantity'],
-            ], $id);
-            Notify::success('Sua san pham thanh cong');
-        } catch (\Exception $e) {
-            Notify::error('Sua san pham that bai');
+        foreach ($data2 as $key => $value) {
+            $array[] = $key;
         }
+
+        foreach ($array as $value) {
+            if (!in_array($value, $categories)) {
+                // echo $value;
+                $product->categories->detach($value);
+            }
+        }
+        foreach ($categories as $category) {
+            if (!in_array($category, $array)) {
+                // echo "chua co danh muc do" . $category;
+                $product->categories()->attach($category);
+            }
+        };
+        $colors = $this->getAttributeById('color', $id);
+        $sizes = $this->getAttributeById('size', $id);
+        $array_color = [];
+        $array_size = [];
+
+        foreach ($colors as $key => $value) {
+            $array_color[] = $key;
+        }
+        foreach ($sizes as $key => $value) {
+            $array_size[] = $key;
+        }
+        foreach ($array_color as $value) {
+            if (!in_array($value, $new_colors)) {
+                // echo $value;
+                $product->attributes->detach($value);
+            }
+        }
+        foreach ($new_colors as $color) {
+            if (!in_array($color, $array_color)) {
+                // echo "chua co danh muc do" . $category;
+                $product->attributes()->attach($color);
+            }
+        };
+        foreach ($array_size as $value) {
+            if (!in_array($value, $new_sizes)) {
+                // echo $value;
+                $product->attributes->detach($value);
+            }
+        }
+        foreach ($new_sizes as $size) {
+            if (!in_array($size, $array_size)) {
+                // echo "chua co danh muc do" . $category;
+                $product->attributes()->attach($size);
+            }
+        };
+        $this->productRepository->update([
+            'name' => $data['name'],
+            'price' => $data['price'],
+            'description' => $data['description'],
+            'quantity' => $data['quantity'],
+        ], $id);
+        Notify::success('Sua san pham thanh cong');
+        // } catch (\Exception $e) {
+        // Notify::error($e->getMessage());
+        // }
     }
 
     public function getAttribute($params, $id)
@@ -157,7 +208,15 @@ class ProductService
             ->where('p.id', '=', $id)
             ->select('av.value_name')
             ->get();
-
+        return $data;
+    }
+    public function getMaxQuantity()
+    {
+        $data = DB::table('order_details as od')
+            ->join('products as p', 'od.product_id', '=', 'p.id')
+            ->groupBy('od.product_id')
+            ->select('od.product_id', DB::raw('SUM(od.quantity) as Số lượng đã bán'))
+            ->limit(1);
         return $data;
     }
 }
