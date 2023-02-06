@@ -120,15 +120,15 @@ class ProductService
         try {
             $product = $this->productRepository->find($id);
             foreach ($product->images as $image) {
-                $image_path = public_path('\storage\uploads\\' . $image->product_img);
+                dd($image_path = public_path('\storage\uploads\\' . $image->product_img));
                 if (File::exists($image_path)) {
                     File::delete($image_path);
                 }
             }
             $this->productRepository->delete($id);
+            $product->categories()->detach($id);
 
             // dd(1);
-            // $product->images()->detach($id);
 
             Notify::success('Xóa sản phẩm thành công', $title = null, $options = []);
         } catch (\Exception $e) {
