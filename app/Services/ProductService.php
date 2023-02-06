@@ -120,7 +120,7 @@ class ProductService
         try {
             $product = $this->productRepository->find($id);
             foreach ($product->images as $image) {
-                dd($image_path = public_path('storage\uploads\\' . $image->product_img));
+                dd($image_path = public_path('storage/uploads//' . $image->product_img));
                 if (File::exists($image_path)) {
                     File::delete($image_path);
                 }
