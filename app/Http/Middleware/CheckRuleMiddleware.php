@@ -20,7 +20,7 @@ class CheckRuleMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::user()->phanquyen === self::$rule) {
+        if (Auth::user()->rule === self::$rule) {
             return $next($request);
         }
         return Redirect::back();

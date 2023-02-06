@@ -49,19 +49,19 @@
                     <label class="form-label" for="form2Example17">Username</label>
                   </div>
                 <div class="form-outline mb-4">
-                    <input type="text" id="form2Example17" class="form-control form-control-lg" />
-                    <label class="form-label" name="password" for="form2Example17">Password</label>
+                    <input type="text" id="form2Example17" name="password" class="form-control form-control-lg" />
+                    <label class="form-label"  for="form2Example17">Password</label>
                   </div>
                   <div class="form-outline mb-4">
                     <input type="text" id="form2Example27" class="form-control form-control-lg" />
                     <label class="form-label"  for="form2Example27">Confirm Password</label>
                   </div>
-                  {{-- @dd(__{{(App\Constants\Admin::RULE_ARRAY)}}) --}}
-                     {{-- <select class="custom-select">
-                         @foreach(@dd{{__(App\Constants\Admin::RULE_ARRAY)}} as $data) 
+                    <label class="form-label"  for="form2Example27">Phân quyền</label>
+                     <select class="custom-select"> 
+                          @foreach(App\Constants\Admin::RULE_ARRAY as $data)
                             <option value="{{$data}}">{{$data}}</option>
                          @endforeach  
-                    </select>  --}}
+                    </select> 
                   <div class="pt-1 mb-4">
                     <button class="btn btn-dark btn-lg btn-block" type="submit">Đăng Kí</button>
                   </div>

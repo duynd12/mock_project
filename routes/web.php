@@ -31,41 +31,41 @@ use Illuminate\Support\Facades\Route;
 //     return view('index');
 // })->name('dashboard');
 
-// Route::middleware('checklogin')->group(function () {
+Route::middleware('checklogin')->group(function () {
 
-Route::get('/', [HomeController::class, 'index'])->name('home.index');
+    Route::get('/', [HomeController::class, 'index'])->name('home.index');
 
-Route::controller(ProductController::class)->group(function () {
-    Route::get('/product-manager', 'index')->name('product.index');
-    Route::get('/them-san-pham', 'create')->name('product.create');
-    Route::post('/createProduct', 'store')->name('prodcut.store');
-    Route::get('/sua-san-pham/{id}', 'edit')->name('product.edit');
-    Route::post('/edit-product/{id}', 'update')->name('product.update');
-    Route::get('/deleteProduct/{id}', 'destroy')->name('product.destroy');
+    Route::controller(ProductController::class)->group(function () {
+        Route::get('/product-manager', 'index')->name('product.index');
+        Route::get('/them-san-pham', 'create')->name('product.create');
+        Route::post('/createProduct', 'store')->name('prodcut.store');
+        Route::get('/sua-san-pham/{id}', 'edit')->name('product.edit');
+        Route::post('/edit-product/{id}', 'update')->name('product.update');
+        Route::get('/deleteProduct/{id}', 'destroy')->name('product.destroy');
+    });
+
+    Route::controller(CategoryController::class)->group(function () {
+        Route::get('/quan-ly-danh-muc', 'index')->name('category.index');
+        Route::get('/quan-ly-danh-muc/{id}', 'edit')->name('category.edit');
+        Route::post('/edit-category/{id}', 'update')->name('category.update');
+        Route::post('/createCategory', 'store')->name('category.store');
+        Route::get('/deleteCategory/{id}', 'destroy')->name('category.destroy');
+        Route::get('/them-danh-muc', 'create')->name('category.create');
+    });
+    Route::controller(AttributeController::class)->group(function () {
+        Route::get('/quan-ly-thuoc-tinh', 'index')->name('attribute.index');
+        Route::get('/quan-ly-thuoc-tinh/{id}', 'edit')->name('attribute.edit');
+        Route::post('/edit-attribute/{id}', 'update')->name('attribute.update');
+        Route::post('/attribute', 'store')->name('attribute.store');
+        Route::get('/deleteAttribute/{id}', 'destroy')->name('attribute.destroy');
+        Route::get('/them-thuoc-tinh', 'create')->name('attribute.create');
+        Route::get('/chi-tiet-thuoc-tinh/{id}', 'show')->name('attribute.show');
+    });
+    Route::get('orders', [OrderController::class, 'index'])->name('order.index');
+    Route::get('thong-ke', [StatisticController::class, 'index'])->name('statistic.index');
+
+    Route::get('chi-tiet-don-hang/{id}', [OrderController::class, 'show'])->name('order.show');
 });
-
-Route::controller(CategoryController::class)->group(function () {
-    Route::get('/quan-ly-danh-muc', 'index')->name('category.index');
-    Route::get('/quan-ly-danh-muc/{id}', 'edit')->name('category.edit');
-    Route::post('/edit-category/{id}', 'update')->name('category.update');
-    Route::post('/createCategory', 'store')->name('category.store');
-    Route::get('/deleteCategory/{id}', 'destroy')->name('category.destroy');
-    Route::get('/them-danh-muc', 'create')->name('category.create');
-});
-Route::controller(AttributeController::class)->group(function () {
-    Route::get('/quan-ly-thuoc-tinh', 'index')->name('attribute.index');
-    Route::get('/quan-ly-thuoc-tinh/{id}', 'edit')->name('attribute.edit');
-    Route::post('/edit-attribute/{id}', 'update')->name('attribute.update');
-    Route::post('/attribute', 'store')->name('attribute.store');
-    Route::get('/deleteAttribute/{id}', 'destroy')->name('attribute.destroy');
-    Route::get('/them-thuoc-tinh', 'create')->name('attribute.create');
-    Route::get('/chi-tiet-thuoc-tinh/{id}', 'show')->name('attribute.show');
-});
-Route::get('orders', [OrderController::class, 'index'])->name('order.index');
-Route::get('thong-ke', [StatisticController::class, 'index'])->name('statistic.index');
-
-Route::get('chi-tiet-don-hang/{id}', [OrderController::class, 'show'])->name('order.show');
-// });
 Route::controller(AdminContrller::class)->group(function () {
     Route::get('admin/login', 'create')->name('admin.create');
     Route::get('admin/register', 'createRegister')->name('admin.createRegister');

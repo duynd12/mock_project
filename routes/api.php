@@ -52,13 +52,13 @@ Route::group(['middleware' => ['jwt.verify']], function () {
 });
 
 
-Route::get('ordertoday', function (Request $request) {
-    $start_date = Carbon::parse($request->start_date);
-    $end_date = Carbon::parse($request->end_date);
+// Route::get('ordertoday', function (Request $request) {
+//     $start_date = Carbon::parse($request->start_date);
+//     $end_date = Carbon::parse($request->end_date);
 
-    $orders = Order::whereBetween('order_date', [$start_date, $end_date])->get();
-    dd($orders);
-    // dd(Carbon::today());
-    // $orders = Order::whereDate('order_date', Carbon::today())->get();
-    // dd($orders);
-});
+//     $orders = Order::whereBetween('order_date', [$start_date, $end_date])->get();
+//     dd($orders);
+//     // dd(Carbon::today());
+//     // $orders = Order::whereDate('order_date', Carbon::today())->get();
+//     // dd($orders);
+// });

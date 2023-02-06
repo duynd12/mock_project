@@ -35,8 +35,6 @@ class AdminContrller extends Controller
             'username' => $request->username,
             'password' => $request->password
         ];
-        // dd($data);
-        dd(Hash::check($data['password'], '$2y$10$ka4051fTHpbFyPV/mJ9o6e5Y5K6Cpa04IRTbFsLZNRKOzdAozFVuG'));
         if (Auth::attempt($data)) {
             return redirect()->route('home.index');
         } else {
@@ -63,9 +61,8 @@ class AdminContrller extends Controller
     {
         try {
             $data = $request->all();
-            $data['password'] = Hash::make(trim($request->password));
+            $data['password'] = Hash::make($request->password);
             $data['rule'] = 'Admin';
-            dd(Hash::check('anhduy123', $data['password']));
 
             $result = Admin::create($data);
             if ($result) {
