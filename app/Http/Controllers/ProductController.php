@@ -12,18 +12,27 @@ use App\Models\Product;
 use App\Models\Attribute;
 use App\Models\Category;
 use App\Repositories\AttributeRepository;
+use App\Services\AttributeService;
 use Illuminate\Support\Facades\DB;
+use App\Constants\Attribute as AttributeConstant;
 
 class ProductController extends Controller
 {
     private $productRepository;
     private $productService;
     private $attributeRepository;
-    public function __construct(ProductRepository $_productRepository, ProductService $_productService, AttributeRepository $_attributeRepository)
-    {
+    private $attributeService;
+
+    public function __construct(
+        ProductRepository $_productRepository,
+        ProductService $_productService,
+        AttributeRepository $_attributeRepository,
+        AttributeService $_attributeService
+    ) {
         $this->productRepository = $_productRepository;
         $this->productService = $_productService;
         $this->attributeRepository = $_attributeRepository;
+        $this->attributeService = $_attributeService;
     }
     /**
      * Display a listing of the resource.
@@ -48,8 +57,8 @@ class ProductController extends Controller
     public function create()
     {
         $categories  = Category::all();
-        $color_values = $this->attributeRepository->getAttributeValue('color');
-        $size_values = $this->attributeRepository->getAttributeValue('size');
+        $color_values = $this->attributeRepository->getAttributeValue(AttributeConstant::ATTRIBUTE_NAME_COLOR);
+        $size_values = $this->attributeRepository->getAttributeValue(AttributeConstant::ATTRIBUTE_NAME_SIZE);
         return view('products.addProduct', [
             'categories' => $categories,
             'colors' => $color_values,
@@ -89,30 +98,12 @@ class ProductController extends Controller
     {
         $data = $this->productService->getProductById($id);
         $categories = Category::all();
-        $colors = DB::table('attribute_values as av')
-            ->join('attributes as a', 'av.attribute_id', '=', 'a.id')
-            ->where('a.name', '=', 'color')
-            ->select('av.id', 'av.value_name')
-            ->get();
-        $sizes = DB::table('attribute_values as av')
-            ->join('attributes as a', 'av.attribute_id', '=', 'a.id')
-            ->where('a.name', '=', 'size')
-            ->select('av.id', 'av.value_name')
-            ->get();
-        $data['colors'] = DB::table('products as p')
-            ->join('attribute_products as ap', 'p.id', '=', 'ap.product_id')
-            ->join('attribute_values as av', 'ap.attribute_value_id', '=', 'av.id')
-            ->join('attributes as a', 'a.id', '=', 'av.attribute_id')
-            ->where('a.name', '=', 'color')
-            ->select('av.id', 'av.value_name')
-            ->get();
-        $data['sizes'] = DB::table('products as p')
-            ->join('attribute_products as ap', 'p.id', '=', 'ap.product_id')
-            ->join('attribute_values as av', 'ap.attribute_value_id', '=', 'av.id')
-            ->join('attributes as a', 'a.id', '=', 'av.attribute_id')
-            ->where('a.name', '=', 'size')
-            ->select('av.id', 'av.value_name')
-            ->get();
+        $colors = $this->attributeService->getValueNameAttr(AttributeConstant::ATTRIBUTE_NAME_COLOR);
+        $sizes = $this->attributeService->getValueNameAttr(AttributeConstant::ATTRIBUTE_NAME_SIZE);
+
+        $data['colors'] = $this->attributeService->getAttributeByIdPRoduct($id, AttributeConstant::ATTRIBUTE_NAME_COLOR);
+        $data['sizes'] = $this->attributeService->getAttributeByIdPRoduct($id, AttributeConstant::ATTRIBUTE_NAME_SIZE);
+
         return view('products.editProduct', [
             'data' => $data,
             'colors' => $colors,
@@ -131,7 +122,6 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->all();
-        // dd($data);
         $this->productService->updateProduct($data, $id);
         return redirect()->route('product.edit', $id);
     }

@@ -17,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data = Category::with('products')->get();
+        $data = Category::with('products')->where('status', '=', 'Hiện')->get();
         return response()->json([
             'data' => $data,
         ]);
@@ -69,6 +69,5 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
     }
 }

@@ -48,8 +48,7 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         try {
-            $data = $request->only('title', 'parentId');
-
+            $data = $request->only('title', 'status');
             $this->categoryRepository->create($data);
             return redirect()->route('categories.addCategory');
             Notify::success('Them thanh cong');
@@ -88,7 +87,8 @@ class CategoryController extends Controller
             // ->keyBy('name')
             ->toArray();
         // dd($data);
-        // dd($data);
+        // dd($data['status']);
+
         return view('categories.editCategory', [
             'data' => $data,
             'products' => $products
@@ -116,6 +116,14 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            DB::beginTransaction();
+            $category = Category::findOrFail($id);
+            $category->delete();
+            $category->products()->detach($id);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+        }
     }
 }

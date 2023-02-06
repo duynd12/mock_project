@@ -1,7 +1,6 @@
 @extends('index')
 
 @section('content')
-{!! Notify::render() !!}
 <h1 class="title">Thêm Sản Phẩm</h1>
 <form action="{{route('prodcut.store')}}" method="post" accept="image/*" enctype="multipart/form-data">
     @csrf

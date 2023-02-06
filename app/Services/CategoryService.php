@@ -10,51 +10,45 @@ use Illuminate\Support\Facades\DB;
 class CategoryService
 {
     private $categoryRepository;
-    public function __construct(CategoryRepository $_categoryRepository)
-    {
+    private $productService;
+
+    public function __construct(
+        CategoryRepository $_categoryRepository,
+        ProductService $_productService
+    ) {
         $this->categoryRepository = $_categoryRepository;
+        $this->productService = $_productService;
     }
     public function updateCategory($request, $id)
     {
         try {
             DB::beginTransaction();
-            $array = [];
-            $data = DB::table('category_products as cp')
-                ->join('categories as c', 'c.id', '=', 'cp.category_id')
-                ->join('products as p', 'p.id', '=', 'cp.product_id')
-                ->where('c.id', '=', $id)
-                ->select('p.id')
-                ->get()
-                ->keyBy('id')
-                ->toArray();
-            $data2 = $request->only('products');
-            foreach ($data as $key => $value) {
-                $array[] = $key;
-            };
+            $data = $this->productService->getCategoryId($id);
+            $data_product = $request->only('products');
             $array_data = $request->all();
             $categories = Category::find($id);
-            foreach ($array as $value) {
-                // xoa product_id in pivot table
-                if (!in_array($value, $data2['products'])) {
-                    $categories->products()->detach($value);
+
+            if (count($data_product) > 0) {
+                foreach ($data as $value) {
+                    if (!in_array($value, $data_product['products'])) {
+                        $categories->products()->detach($value);
+                    }
+                }
+
+                foreach ($data_product['products'] as $value) {
+                    if (!in_array($value, $data)) {
+                        $categories->products()->attach($value);
+                    }
                 }
             }
-
-            foreach ($data2['products'] as $value) {
-                // xoa product_id in pivot table
-                if (!in_array($value, $array)) {
-                    $categories->products()->attach($value);
-                }
-            }
-
             $this->categoryRepository->update([
                 'title' => $array_data['title'],
-                'parentId' => $array_data['parentId']
+                'status' => $array_data['status']
             ], $id);
             DB::commit();
             Notify::success('Sửa danh mục thành công');
         } catch (\Exception $e) {
-            Notify::error('Sửa danh mục thất bại');
+            Notify::error($e->getMessage());
             DB::rollBack();
         }
     }

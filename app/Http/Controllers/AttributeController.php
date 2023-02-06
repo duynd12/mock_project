@@ -22,7 +22,6 @@ class AttributeController extends Controller
     public function index()
     {
         $data = Attribute::paginate(5);
-        // dd($data);
         return view('attributes.attributeManager', ['data' => $data]);
     }
     public function create()
@@ -41,6 +40,12 @@ class AttributeController extends Controller
         return redirect()->route('attribute.create');
     }
 
+    public function edit($id)
+    {
+        $data = Attribute::findOrFail($id);
+        return view('attributes.editAttribute', ['data' => $data]);
+    }
+
     /**
      * Display the specified resource.
      *
@@ -50,7 +55,6 @@ class AttributeController extends Controller
     public function show($id)
     {
         $data = Attribute::with(['attributeValues'])->find($id);
-        // dd($data);
         return view('attributes.AttributeValueManager', ['data' => $data]);
     }
 
@@ -63,7 +67,10 @@ class AttributeController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        Attribute::findOrFail($id)->update([
+            'name' => $data['name']
+        ]);
     }
 
     /**
@@ -74,6 +81,6 @@ class AttributeController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Attribute::findOrFail($id)->delete();
     }
 }

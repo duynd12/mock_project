@@ -19,7 +19,7 @@
             <tr>
                 <th scope="col">id</th>
                 <th scope="col">title</th>
-                <th scope="col">ParentId</th>
+                <th scope="col">Trạng thái</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
@@ -28,7 +28,7 @@
             <tr>
                 <th scope="row">{{$cate['id']}}</th>
                 <td>{{$cate['title']}}</td>
-                <td>{{$cate['parentId']}}</td>
+                <td>{{$cate['status']}}</td>
                 <td>
                     <button class="btn btn-primary">
                         <a href="{{route('category.edit',$cate['id']) }}" style="color:white">

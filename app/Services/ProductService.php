@@ -8,6 +8,7 @@ use App\Repositories\ImageRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Support\Facades\DB;
 use Helmesvs\Notify\Facades\Notify as Notify;
+use Illuminate\Support\Facades\File;
 use PhpParser\Node\Stmt\Nop;
 
 class ProductService
@@ -16,10 +17,28 @@ class ProductService
     private $productRepository;
     private $imageRepository;
 
-    public function __construct(ProductRepository $_productRepository, ImageRepository $_imageRepository)
-    {
+    public function __construct(
+        ProductRepository $_productRepository,
+        ImageRepository $_imageRepository,
+    ) {
         $this->productRepository = $_productRepository;
         $this->imageRepository = $_imageRepository;
+    }
+    public function updateCategory($id, $categories)
+    {
+
+        $product = Product::find($id);
+
+        foreach ($this->getCategoryId($id) as $value) {
+            if (!in_array($value, $categories)) {
+                $product->categories()->detach($value);
+            }
+        }
+        foreach ($categories as $category) {
+            if (!in_array($category, $this->getCategoryId($id))) {
+                $product->categories()->attach($category);
+            }
+        };
     }
     public function getAttributeById($params, $id)
     {
@@ -36,64 +55,57 @@ class ProductService
 
         return $data;
     }
+
+    public function upLoadImage($request, $product_id)
+    {
+        $uploadPath = 'storage/uploads/';
+        $images = $request->file('images');
+        foreach ($images as $image) {
+            $extention = $image->getClientOriginalExtension();
+            $file_name = current(explode('.', $image->getClientOriginalName()));
+            $path_name = time() . $file_name . '.' . $extention;
+            $image->move($uploadPath, $path_name);
+
+            $this->imageRepository->create(
+                [
+                    'product_id' => $product_id,
+                    'product_img' => $path_name
+                ]
+            );
+        }
+    }
+    public function createAttributeProduct($data, $product_id)
+    {
+        foreach ($data as $attr) {
+            AttributeProduct::create([
+                'product_id' => $product_id,
+                'attribute_value_id' => $attr
+            ]);
+        }
+    }
     public function createProduct($request)
     {
         try {
             DB::beginTransaction();
-
-            $data = $request->all();
-            $data2 = $request->only(['name', 'price', 'description', 'quantity']);
-            $reslut = $this->productRepository->create($data2);
+            $data = $request->only(['name', 'price', 'description', 'quantity']);
+            $reslut = $this->productRepository->create($data);
             $product_id = $reslut->id;
 
             if ($request['categories']) {
-                $product = Product::find($product_id);
-                $categories = $request['categories'];
-                foreach ($categories as $category) {
-                    $product->categories()->attach($category);
-                    // $this->productRepository->createCategoryProduct(
-                    //     [
-                    //         'product_id' => $product_id,
-                    //         'category_id' => $category
-                    //     ]
-                    // );
-                }
+                $this->updateCategory($product_id, $request['categories']);
             }
             if ($request->hasfile('images')) {
-                $uploadPath = 'storage/uploads/';
-                $images = $request->file('images');
-                foreach ($images as $image) {
-                    $extention = $image->getClientOriginalExtension();
-                    $file_name = current(explode('.', $image->getClientOriginalName()));
-                    $path_name = time() . $file_name . '.' . $extention;
-                    $image->move($uploadPath, $path_name);
-
-                    $this->imageRepository->create(
-                        [
-                            'product_id' => $product_id,
-                            'product_img' => $path_name
-                        ]
-                    );
-                }
+                $this->upLoadImage($request, $product_id);
             }
             if ($request['sizes']) {
                 $sizes = $request['sizes'];
-                foreach ($sizes as $size) {
-                    AttributeProduct::create([
-                        'product_id' => $product_id,
-                        'attribute_value_id' => $size
-                    ]);
-                }
+                $this->createAttributeProduct($sizes, $product_id);
             }
             if ($request['colors']) {
                 $colors = $request['colors'];
-                foreach ($colors as $color) {
-                    AttributeProduct::create([
-                        'product_id' => $product_id,
-                        'attribute_value_id' => $color
-                    ]);
-                }
+                $this->createAttributeProduct($colors, $product_id);
             }
+
             DB::commit();
             Notify::success('Thêm sản phẩm thành công', $title = null, $options = []);
         } catch (\throwable $th) {
@@ -106,7 +118,18 @@ class ProductService
     public function deleteProduct($id)
     {
         try {
+            $product = $this->productRepository->find($id);
+            foreach ($product->images as $image) {
+                $image_path = public_path('\storage\uploads\\' . $image->product_img);
+                if (File::exists($image_path)) {
+                    File::delete($image_path);
+                }
+            }
             $this->productRepository->delete($id);
+
+            // dd(1);
+            // $product->images()->detach($id);
+
             Notify::success('Xóa sản phẩm thành công', $title = null, $options = []);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
@@ -117,12 +140,22 @@ class ProductService
     {
         return $this->productRepository->find($id);
     }
-    public function updateProduct(array $data, $id)
+    public function getArrayAttribute($attr, $id)
     {
-        // try {
         $array = [];
-        $product = Product::find($id);
-        $data2 = DB::table('category_products as cp')
+
+        $data = $this->getAttributeById($attr, $id);
+
+        foreach ($data as $key => $value) {
+            $array[] = $key;
+        }
+        return $array;
+    }
+
+    public function getCategoryId($id)
+    {
+        $array = [];
+        $category_id = DB::table('category_products as cp')
             ->join('categories as c', 'c.id', '=', 'cp.category_id')
             ->join('products as p', 'p.id', '=', 'cp.product_id')
             ->where('p.id', '=', $id)
@@ -130,72 +163,58 @@ class ProductService
             ->get()
             ->keyBy('id')
             ->toArray();
-        // dd($data);
-        $categories = $data['categories'];
-        $new_colors = $data['colors'];
-        $new_sizes = $data['sizes'];
 
-        foreach ($data2 as $key => $value) {
+        foreach ($category_id as $key => $value) {
             $array[] = $key;
         }
 
-        foreach ($array as $value) {
-            if (!in_array($value, $categories)) {
-                // echo $value;
-                $product->categories->detach($value);
-            }
-        }
-        foreach ($categories as $category) {
-            if (!in_array($category, $array)) {
-                // echo "chua co danh muc do" . $category;
-                $product->categories()->attach($category);
-            }
-        };
-        $colors = $this->getAttributeById('color', $id);
-        $sizes = $this->getAttributeById('size', $id);
-        $array_color = [];
-        $array_size = [];
+        return $array;
+    }
 
-        foreach ($colors as $key => $value) {
-            $array_color[] = $key;
-        }
-        foreach ($sizes as $key => $value) {
-            $array_size[] = $key;
-        }
-        foreach ($array_color as $value) {
-            if (!in_array($value, $new_colors)) {
-                // echo $value;
-                $product->attributes->detach($value);
+    public function updateAttribute($id, $array_attr, $new_attr)
+    {
+
+        $product = Product::find($id);
+        foreach ($array_attr as $value) {
+            if (!in_array($value, $new_attr)) {
+                $product->attributes()->detach($value);
             }
         }
-        foreach ($new_colors as $color) {
-            if (!in_array($color, $array_color)) {
-                // echo "chua co danh muc do" . $category;
-                $product->attributes()->attach($color);
+        foreach ($new_attr as $value) {
+            if (!in_array($value, $array_attr)) {
+                $product->attributes()->attach($value);
             }
         };
-        foreach ($array_size as $value) {
-            if (!in_array($value, $new_sizes)) {
-                // echo $value;
-                $product->attributes->detach($value);
-            }
+    }
+    public function updateProduct(array $data, $id)
+    {
+        try {
+            DB::beginTransaction();
+            $array_size = $this->getArrayAttribute('size', $id);
+            $array_color = $this->getArrayAttribute('color', $id);
+
+            if (isset($data['categories'])) {
+                $this->updateCategory($id, $data['categories']);
+            };
+            if (isset($data['sizes'])) {
+                $this->updateAttribute($id, $array_size, $data['sizes']);
+            };
+            if (isset($data['colors'])) {
+                $this->updateAttribute($id, $array_color, $data['colors']);
+            };
+
+            $this->productRepository->update([
+                'name' => $data['name'],
+                'price' => $data['price'],
+                'description' => $data['description'],
+                'quantity' => $data['quantity'],
+            ], $id);
+            DB::commit();
+            Notify::success('Sua san pham thanh cong');
+        } catch (\Exception $e) {
+            DB::commit();
+            Notify::success($e->getMessage());
         }
-        foreach ($new_sizes as $size) {
-            if (!in_array($size, $array_size)) {
-                // echo "chua co danh muc do" . $category;
-                $product->attributes()->attach($size);
-            }
-        };
-        $this->productRepository->update([
-            'name' => $data['name'],
-            'price' => $data['price'],
-            'description' => $data['description'],
-            'quantity' => $data['quantity'],
-        ], $id);
-        Notify::success('Sua san pham thanh cong');
-        // } catch (\Exception $e) {
-        // Notify::error($e->getMessage());
-        // }
     }
 
     public function getAttribute($params, $id)

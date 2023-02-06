@@ -62,7 +62,6 @@ class AdminContrller extends Controller
         try {
             $data = $request->all();
             $data['password'] = Hash::make($request->password);
-            $data['rule'] = 'Admin';
 
             $result = Admin::create($data);
             if ($result) {

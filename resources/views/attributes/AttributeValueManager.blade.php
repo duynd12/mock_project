@@ -6,18 +6,14 @@
 
 @section('content')
 <div class="category-manager">
-    {{-- <div class="category-manager-title">
+    <div class="category-manager-title">
         <h1>Quản lý Value Thuộc tính </h1>
-        <form action="{{route('attribute.index')}}" method="get">
-            <input type="text" name="search">
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-        <button class="btn btn-primary">
-            <a href="{{route('attribute.create')}}" style="color:white">
+        <button class="btn btn-outline-primary" style="float:right">
+            <a href="{{route('attributeValue.showformCreate',$data['id'])}}">
                 Thêm Value thuộc tính 
             </a>
         </button>
-    </div> --}}
+    </div>
     <table class="table">
         <thead>
             <tr>
@@ -35,7 +31,7 @@
                 <th scope="row">{{$attrValue['id']}}</th>
                 <td>{{$data['name']}}</td>
                 <td>{{$attrValue['value_name']}}</td>
-                {{-- <td>
+                <td>
                     <button class="btn btn-primary">
                         <a href="{{route('attributeValue.edit',$attrValue['id']) }}" style="color:white">
                             Edit
@@ -46,7 +42,7 @@
                             Delete
                         </a>
                     </button>
-                </td> --}}
+                </td>
             </tr>
             @endforeach
         </tbody>

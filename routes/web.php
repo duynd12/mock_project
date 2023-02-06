@@ -2,16 +2,19 @@
 
 use App\Http\Controllers\AdminContrller;
 use App\Http\Controllers\AttributeController;
+use App\Http\Controllers\AttributeValueController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StatisticController;
+use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
@@ -73,6 +76,16 @@ Route::controller(AdminContrller::class)->group(function () {
     Route::post('admin/register', 'store')->name('admin.store');
     Route::get('admin/logout', 'logout')->name('admin.logout');
 });
+Route::get('them-value-thuoc-tinh/{id}', [AttributeValueController::class, 'showformCreate'])->name('attributeValue.showformCreate');
+Route::post('them-value-thuoc-tinh/{id}', [AttributeValueController::class, 'store'])->name('attributeValue.store');
+Route::get('sua-value-thuoc-tinh/{id}', [AttributeValueController::class, 'edit'])->name('attributeValue.edit');
+Route::post('sua-value-thuoc-tinh/{id}', [AttributeValueController::class, 'update'])->name('attributeValue.update');
+Route::get('xoa-value-thuoc-tinh/{id}', [AttributeValueController::class, 'destroy'])->name('attributeValue.destroy');
+
+Route::get('sua-value-thuoc-tinh/{id}', [AttributeController::class, 'edit'])->name('attribute.edit');
+Route::post('sua-value-thuoc-tinh/{id}', [AttributeController::class, 'update'])->name('attribute.update');
+
+
 
 
 
