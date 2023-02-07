@@ -40,7 +40,6 @@
                                 style="max-width: 50px; max-heigh: 50px">
                     @endforeach
                 </td>
-
                 <td>
                     <button class="btn btn-primary">
                         <a href="{{route('product.edit',$pro['id'])}}" style="color:white">

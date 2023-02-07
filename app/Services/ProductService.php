@@ -16,6 +16,8 @@ class ProductService
 
     private $productRepository;
     private $imageRepository;
+    private $orderRepository;
+
 
     public function __construct(
         ProductRepository $_productRepository,
@@ -24,18 +26,39 @@ class ProductService
         $this->productRepository = $_productRepository;
         $this->imageRepository = $_imageRepository;
     }
+    public function getSumOrder()
+    {
+        $sum = 0;
+        $total_price = $this->orderRepository->getFieldTotalPrice();
+        foreach ($total_price as $price) {
+            $sum += $price;
+        }
+
+        return $sum;
+    }
     public function updateCategory($id, $categories)
     {
 
         $product = Product::find($id);
 
-        foreach ($this->getCategoryId($id) as $value) {
+        // foreach ($this->getCategoryId($id) as $value) {
+        //     if (!in_array($value, $categories)) {
+        //         $product->categories()->detach($value);
+        //     }
+        // }
+        // foreach ($categories as $category) {
+        //     if (!in_array($category, $this->getCategoryId($id))) {
+        //         $product->categories()->attach($category);
+        //     }
+        // };
+
+        foreach ($this->getIdCateOrProduct('category', $id) as $value) {
             if (!in_array($value, $categories)) {
                 $product->categories()->detach($value);
             }
         }
         foreach ($categories as $category) {
-            if (!in_array($category, $this->getCategoryId($id))) {
+            if (!in_array($category, $this->getIdCateOrProduct('category', $id))) {
                 $product->categories()->attach($category);
             }
         };
@@ -44,6 +67,7 @@ class ProductService
 
     public function getAttributeById($params, $id)
     {
+        $array = [];
         $data = DB::table('products as p')
             ->join('attribute_products as ap', 'p.id', '=', 'ap.product_id')
             ->join('attribute_values as av', 'ap.attribute_value_id', '=', 'av.id')
@@ -54,8 +78,10 @@ class ProductService
             ->get()
             ->keyBy('id')
             ->toArray();
-
-        return $data;
+        foreach ($data as $key => $value) {
+            $array[] = $key;
+        }
+        return $array;
     }
 
     public function upLoadImage($images, $product_id)
@@ -115,21 +141,23 @@ class ProductService
             DB::rollback();
         }
     }
-
+    public function deleteImage($image)
+    {
+        $image_path = public_path('storage/uploads/' . $image->product_img);
+        if (File::exists($image_path)) {
+            File::delete($image_path);
+        }
+    }
     public function deleteProduct($id)
     {
         try {
             $product = $this->productRepository->find($id);
             foreach ($product->images as $image) {
-                $image_path = public_path('storage/uploads/' . $image->product_img);
-                if (File::exists($image_path)) {
-                    File::delete($image_path);
-                }
+                $this->deleteImage($image);
             }
             $this->productRepository->delete($id);
             $product->categories()->detach($id);
             $product->attributes()->detach($id);
-
 
             Notify::success('Xóa sản phẩm thành công', $title = null, $options = []);
         } catch (\Exception $e) {
@@ -141,55 +169,85 @@ class ProductService
     {
         return $this->productRepository->find($id);
     }
-    public function getArrayAttribute($attr, $id)
+
+    // 11h00 7022023
+    // public function getArrayAttribute($attr, $id)
+    // {
+    //     $array = [];
+
+    //     $data = $this->getAttributeById($attr, $id);
+
+    //     foreach ($data as $key => $value) {
+    //         $array[] = $key;
+    //     }
+    //     return $array;
+    // }
+
+    // 7/02/2023 test
+    public function getIdCateOrProduct($keyword, $id)
     {
         $array = [];
 
-        $data = $this->getAttributeById($attr, $id);
-
-        foreach ($data as $key => $value) {
-            $array[] = $key;
+        if ($keyword == 'product') {
+            $id_where = 'c.id';
+            $id_select = 'p.id';
         }
-        return $array;
-    }
-
-    public function getProductId($id)
-    {
-        $array = [];
-        $category_id = DB::table('category_products as cp')
+        if ($keyword == 'category') {
+            $id_where = 'p.id';
+            $id_select = 'c.id';
+        }
+        $array_id = DB::table('category_products as cp')
             ->join('categories as c', 'c.id', '=', 'cp.category_id')
             ->join('products as p', 'p.id', '=', 'cp.product_id')
-            ->where('c.id', '=', $id)
-            ->select('p.id')
+            ->where($id_where, '=', $id)
+            ->select($id_select)
             ->get()
             ->keyBy('id')
             ->toArray();
 
-        foreach ($category_id as $key => $value) {
+        foreach ($array_id as $key => $value) {
             $array[] = $key;
         }
-
+        // dd($array);
         return $array;
     }
+    // public function getProductId($id)
+    // {
+    //     $array = [];
+    //     $category_id = DB::table('category_products as cp')
+    //         ->join('categories as c', 'c.id', '=', 'cp.category_id')
+    //         ->join('products as p', 'p.id', '=', 'cp.product_id')
+    //         ->where('c.id', '=', $id)
+    //         ->select('p.id')
+    //         ->get()
+    //         ->keyBy('id')
+    //         ->toArray();
 
-    public function getCategoryId($id)
-    {
-        $array = [];
-        $category_id = DB::table('category_products as cp')
-            ->join('categories as c', 'c.id', '=', 'cp.category_id')
-            ->join('products as p', 'p.id', '=', 'cp.product_id')
-            ->where('p.id', '=', $id)
-            ->select('c.id')
-            ->get()
-            ->keyBy('id')
-            ->toArray();
+    //     foreach ($category_id as $key => $value) {
+    //         $array[] = $key;
+    //     }
 
-        foreach ($category_id as $key => $value) {
-            $array[] = $key;
-        }
+    //     return $array;
+    // }
 
-        return $array;
-    }
+    // public function getCategoryId($id)
+    // {
+    //     $array = [];
+    //     $category_id = DB::table('category_products as cp')
+    //         ->join('categories as c', 'c.id', '=', 'cp.category_id')
+    //         ->join('products as p', 'p.id', '=', 'cp.product_id')
+    //         ->where('p.id', '=', $id)
+    //         ->select('c.id')
+    //         ->get()
+    //         ->keyBy('id')
+    //         ->toArray();
+
+    //     foreach ($category_id as $key => $value) {
+    //         $array[] = $key;
+    //     }
+
+    //     return $array;
+    // }
 
     public function updateAttribute($id, $array_attr, $new_attr)
     {
@@ -210,9 +268,8 @@ class ProductService
     {
         try {
             DB::beginTransaction();
-            $array_size = $this->getArrayAttribute('size', $id);
-            $array_color = $this->getArrayAttribute('color', $id);
-
+            $array_size = $this->getAttributeById('size', $id);
+            $array_color = $this->getAttributeById('color', $id);
             if (isset($data['categories'])) {
                 $this->updateCategory($id, $data['categories']);
             };

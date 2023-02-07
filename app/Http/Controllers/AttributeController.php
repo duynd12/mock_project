@@ -10,15 +10,16 @@ use Illuminate\Http\Request;
 
 class AttributeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     private $attributeService;
-    public function __construct(AttributeService $_attributeService)
-    {
+    private $attributeRepository;
+
+    public function __construct(
+        AttributeService $_attributeService,
+        AttributeRepository $_attributeRepository
+    ) {
         $this->attributeService = $_attributeService;
+        $this->attributeRepository = $_attributeRepository;
     }
     public function index()
     {
@@ -29,12 +30,7 @@ class AttributeController extends Controller
     {
         return view('attributes.addAttribute');
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(AttributeRequest $request)
     {
         $this->attributeService->createAttribute($request);
@@ -43,48 +39,24 @@ class AttributeController extends Controller
 
     public function edit($id)
     {
-        $data = Attribute::findOrFail($id);
-        return view('attributes.editAttribute', ['data' => $data]);
+        $data = $this->attributeRepository->find($id);
+        return view('attributes.editAttribute', [
+            'data' => $data
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $data = Attribute::with(['attributeValues'])->find($id);
         return view('attributes.AttributeValueManager', ['data' => $data]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(AttributeRequest $request, $id)
     {
         $this->attributeService->updateAttribute($request, $id);
-        return redirect()->route('attribute.edit');
-        // $data = $request->all();
-        // try{
-        //     Attribute::findOrFail($id)->update([
-        //         'name' => $data['name']
-        //     ]);
-
-        // }
+        return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $this->attributeService->deleteAttribute($id);

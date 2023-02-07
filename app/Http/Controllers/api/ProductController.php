@@ -9,6 +9,7 @@ use App\Repositories\ProductRepository;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Constants\Product as ProductConstants;
 
 class ProductController extends Controller
 {
@@ -21,68 +22,35 @@ class ProductController extends Controller
         $this->productRepository = $_productRepository;
         $this->productService = $_productService;
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        // $data = Product::paginate(\App\Constants\Product::PRODUCT_LIST_LIMIT);
-
-        // $data = $this->productRepository->all();
-        $data = Product::with(['images'])->paginate(20);
+        $data = Product::with(['images'])->paginate(ProductConstants::PRODUCT_LIST_LIMIT);
         return response()->json([
             'data' => $data,
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         $data = Product::with(['images'])->get()->find($id);
-        $data['sizes'] = $this->productService->getAttribute('size', $id);
-        $data['colors'] = $this->productService->getAttribute('color', $id);
+        $data['sizes'] = $this->productService->getAttribute(ProductConstants::PRODUCT_VALUE_SIZE, $id);
+        $data['colors'] = $this->productService->getAttribute(ProductConstants::PRODUCT_VALUE_COLOR, $id);
 
         return response()->json([
             'data' => $data,
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

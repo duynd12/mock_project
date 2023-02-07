@@ -6,7 +6,7 @@
 
 @section('content')
 <h1>Sửa value thuộc tính</h1>
-<form action="{{route('attributeValue.update',$id)}}" method="post" enctype="multipart/form-data">
+<form action="{{route('attributeValue.update',$data['id'])}}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
         <label for="exampleInputEmail1">Tên Vaue thuộc tính : </label>

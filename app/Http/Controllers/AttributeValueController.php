@@ -4,114 +4,64 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AttributeValueRequest;
 use App\Models\AttributeValue;
+use App\Repositories\AttributeValueRepository;
+use App\Services\AttributeValueService;
 use Helmesvs\Notify\Facades\Notify;
-use Illuminate\Http\Request;
+use App\Constants\Attribute as AttributeConstants;
 
 class AttributeValueController extends Controller
 {
-    private $attribute_id;
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    private $attributeValueService;
+    private $attributeValueRepository;
+
+
+    public function __construct(
+        AttributeValueService $_attributeValueService,
+        AttributeValueRepository $_attributeValueRepository
+    ) {
+        $this->attributeValueService = $_attributeValueService;
+        $this->attributeValueRepository = $_attributeValueRepository;
+    }
     public function index()
     {
-        $data = AttributeValue::all();
+        $data = $this->attributeValueRepository->paginate(AttributeConstants::ATTRIBUTE_VALUE_LIMIT_SHOW);
         return view('attributes.AttributeValueManager');
     }
     public function showformCreate($id)
     {
-        $this->attribute_id = $id;
         return view('attributes.addAttributeValue', ['id' => $id]);
     }
-    // public function create($id)
-    // {
-    //     $this->attribute_id = $id;
-    //     return view('attributes.addAttributeValue', $id);
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-    
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(AttributeValueRequest $request, $id)
+    public function create($id)
     {
-        $data = $request['value_name'];
-        try {
-            AttributeValue::create([
-                'attribute_id' => $id,
-                'value_name' => $data
-            ]);
-            Notify::success("Thêm thành công");
-            return redirect()->back();
-        } catch (\Exception $e) {
-            Notify::success("Thêm thất bại");
-        }
+        return view('attributes.addAttributeValue', ['id' => $id]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function store(AttributeValueRequest $request, $id)
+    {
+        $this->attributeValueService->createAttrValue($request, $id);
+        return redirect()->back();
+    }
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        $data = AttributeValue::find($id);
-        return view('attributes.editAttributeValue', [
-            'id' => $id,
-            'data' => $data
-        ]);
+        $data = $this->attributeValueRepository->find($id);
+        return view('attributes.editAttributeValue', ['data' => $data]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(AttributeValueRequest $request, $id)
     {
-        $data = $request->all();
-        try {
-            AttributeValue::findOrFail($id)->update([
-                'value_name' => $data['value_name'],
-            ]);
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
-            // throw new $e->getMessage();
-        }
+        $this->attributeValueService->updateAttrValue($request, $id);
+        return redirect()->back();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        try {
-            AttributeValue::destroy($id);
-            Notify::success("Xóa thành công");
-            return redirect()->back();
-        } catch (\Exception $e) {
-            Notify::success("Xóa thất bại");
-        }
+        $this->attributeValueService->deleteAttrValue($id);
+        return redirect()->back();
     }
 }

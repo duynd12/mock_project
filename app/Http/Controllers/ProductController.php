@@ -2,21 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AttributeValue;
-use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Repositories\ProductRepository;
 use App\Services\ProductService;
-use Helmesvs\Notify\Facades\Notify;
-use Illuminate\Http\Request;
-use App\Models\Product;
-use App\Models\Attribute;
 use App\Models\Category;
 use App\Repositories\AttributeRepository;
 use App\Services\AttributeService;
-use Illuminate\Support\Facades\DB;
 use App\Constants\Attribute as AttributeConstant;
 use App\Http\Requests\AddProductRequest;
 use App\Http\Requests\EditProductRequest;
+use App\Repositories\CategoryRepository;
+use App\Constants\Product as ProductConstants;
 
 class ProductController extends Controller
 {
@@ -24,43 +19,34 @@ class ProductController extends Controller
     private $productService;
     private $attributeRepository;
     private $attributeService;
+    private $categoryRepository;
 
     public function __construct(
         ProductRepository $_productRepository,
         ProductService $_productService,
         AttributeRepository $_attributeRepository,
-        AttributeService $_attributeService
+        AttributeService $_attributeService,
+        CategoryRepository $_categoryRepository
     ) {
         $this->productRepository = $_productRepository;
         $this->productService = $_productService;
         $this->attributeRepository = $_attributeRepository;
         $this->attributeService = $_attributeService;
+        $this->categoryRepository = $_categoryRepository;
     }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        $data = $this->productRepository->paginate(5);
-        // $data = Product::with(['images'])->get();
-        // dd($data);
-        // $attribute_value = AttributeValue::all();
-        // $data = Product::with(['images', 'attributes'])->get();
+        $data = $this->productRepository->paginate(ProductConstants::PRODUCT_LIST_LIMIT);
         return view('products.productManager', ['data' => $data]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $categories  = Category::all();
+        $categories = $this->categoryRepository->all();
         $color_values = $this->attributeRepository->getAttributeValue(AttributeConstant::ATTRIBUTE_NAME_COLOR);
         $size_values = $this->attributeRepository->getAttributeValue(AttributeConstant::ATTRIBUTE_NAME_SIZE);
+
         return view('products.addProduct', [
             'categories' => $categories,
             'colors' => $color_values,
@@ -68,34 +54,16 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(AddProductRequest $request)
     {
         $this->productService->createProduct($request);
         return redirect()->route('product.create');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show()
     {
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $data = $this->productService->getProductById($id);
@@ -114,13 +82,6 @@ class ProductController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(EditProductRequest $request, $id)
     {
         $data = $request->all();
@@ -128,12 +89,6 @@ class ProductController extends Controller
         return redirect()->route('product.edit', $id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $this->productService->deleteProduct($id);

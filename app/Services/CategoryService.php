@@ -19,11 +19,23 @@ class CategoryService
         $this->categoryRepository = $_categoryRepository;
         $this->productService = $_productService;
     }
+    public function createCategory($request)
+    {
+        try {
+            $data = $request->only('title', 'status');
+            $this->categoryRepository->create($data);
+            Notify::success('Them thanh cong');
+        } catch (\Exception $e) {
+            Notify::error($e->getMessage());
+        }
+    }
     public function updateCategory($request, $id)
     {
         try {
             DB::beginTransaction();
-            $data = $this->productService->getProductId($id);
+
+            // 7022023 test
+            $data = $this->productService->getIdCateOrProduct('product', $id);
             $data_product = $request->only('products');
             $array_data = $request->all();
             $categories = Category::find($id);
@@ -37,7 +49,6 @@ class CategoryService
                 }
                 foreach ($data_product['products'] as $value) {
                     if (!in_array($value, $data)) {
-                        echo "array cu khong co san pham do " . $value;
                         $categories->products()->attach($value);
                     }
                 }
@@ -46,11 +57,27 @@ class CategoryService
                 'title' => $array_data['title'],
                 'status' => $array_data['status']
             ], $id);
+
             DB::commit();
             Notify::success('Sửa danh mục thành công');
         } catch (\Exception $e) {
             Notify::error($e->getMessage());
             DB::rollBack();
+        }
+    }
+
+    public function deleteCategory($id)
+    {
+        try {
+            DB::beginTransaction();
+            $category = $this->categoryRepository->find($id);
+            $category->delete();
+            $category->products()->detach($id);
+            DB::commit();
+            Notify::success('Them thanh cong');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Notify::error($e->getMessage());
         }
     }
 }

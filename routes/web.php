@@ -76,11 +76,12 @@ Route::controller(AdminContrller::class)->group(function () {
     Route::post('admin/register', 'store')->name('admin.store');
     Route::get('admin/logout', 'logout')->name('admin.logout');
 });
-Route::get('them-value-thuoc-tinh/{id}', [AttributeValueController::class, 'showformCreate'])->name('attributeValue.showformCreate');
+// Route::get('them-value-thuoc-tinh/{id}', [AttributeValueController::class, 'showformCreate'])->name('attributeValue.showformCreate');
 Route::post('them-value-thuoc-tinh/{id}', [AttributeValueController::class, 'store'])->name('attributeValue.store');
 Route::get('sua-value-thuoc-tinh/{id}', [AttributeValueController::class, 'edit'])->name('attributeValue.edit');
 Route::post('sua-value-thuoc-tinh/{id}', [AttributeValueController::class, 'update'])->name('attributeValue.update');
 Route::get('xoa-value-thuoc-tinh/{id}', [AttributeValueController::class, 'destroy'])->name('attributeValue.destroy');
+Route::get('them-value-thuoc-tinh/{id}', [AttributeValueController::class, 'create'])->name('attributeValue.create');
 
 // Route::get('sua-thuoc-tinh/{id}', [AttributeController::class, 'edit'])->name('attribute.edit');
 // Route::post('sua-value-thuoc-tinh/{id}', [AttributeController::class, 'update'])->name('attribute.update');
@@ -141,23 +142,23 @@ Route::get('test', function () {
 //     // dd($orders);
 // });
 
-Route::get('test1', function () {
-    $data =  DB::table('orders')
-        ->selectRaw(" count(id) as So_luong_da_ban,
-	CASE
-    	WHEN DAYOFWEEK(order_date) = '1' THEN 'Sunday'
-        WHEN DAYOFWEEK(order_date) = '2' THEN 'Monday'
-        WHEN DAYOFWEEK(order_date) = '3' THEN 'Tuesday'
-        WHEN DAYOFWEEK(order_date) = '4' THEN 'Wednesday'
-        WHEN DAYOFWEEK(order_date) = '5' THEN 'Thursday'
-        WHEN DAYOFWEEK(order_date) = '6' THEN 'Friday'
-        WHEN DAYOFWEEK(order_date) = '7' THEN 'Saturday'
-        ELSE 'not a day of week'
-    END AS day_of_week
-    ")
-        ->groupBy('day_of_week')
-        ->get()
-        ->toArray();
+// Route::get('test1', function () {
+//     $data =  DB::table('orders')
+//         ->selectRaw(" count(id) as So_luong_da_ban,
+// 	CASE
+//     	WHEN DAYOFWEEK(order_date) = '1' THEN 'Sunday'
+//         WHEN DAYOFWEEK(order_date) = '2' THEN 'Monday'
+//         WHEN DAYOFWEEK(order_date) = '3' THEN 'Tuesday'
+//         WHEN DAYOFWEEK(order_date) = '4' THEN 'Wednesday'
+//         WHEN DAYOFWEEK(order_date) = '5' THEN 'Thursday'
+//         WHEN DAYOFWEEK(order_date) = '6' THEN 'Friday'
+//         WHEN DAYOFWEEK(order_date) = '7' THEN 'Saturday'
+//         ELSE 'not a day of week'
+//     END AS day_of_week
+//     ")
+//         ->groupBy('day_of_week')
+//         ->get()
+//         ->toArray();
 
-    dd($data);
-});
+//     dd($data);
+// });
