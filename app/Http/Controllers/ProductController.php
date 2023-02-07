@@ -15,6 +15,8 @@ use App\Repositories\AttributeRepository;
 use App\Services\AttributeService;
 use Illuminate\Support\Facades\DB;
 use App\Constants\Attribute as AttributeConstant;
+use App\Http\Requests\AddProductRequest;
+use App\Http\Requests\EditProductRequest;
 
 class ProductController extends Controller
 {
@@ -72,7 +74,7 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AddProductRequest $request)
     {
         $this->productService->createProduct($request);
         return redirect()->route('product.create');
@@ -119,7 +121,7 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditProductRequest $request, $id)
     {
         $data = $request->all();
         $this->productService->updateProduct($data, $id);

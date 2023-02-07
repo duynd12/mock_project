@@ -43,7 +43,9 @@ class CategoryController extends Controller
     public function show($id)
     {
         $data = Category::find($id)->products->pluck('id');
-        $products = Product::with('images')->whereIn('id', $data)->get();
+        $products = Product::with('images')
+            ->whereIn('id', $data)
+            ->paginate(20);
         return response()->json([
             'data' => $products,
         ]);

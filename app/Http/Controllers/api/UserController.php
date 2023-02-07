@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminRequest;
 use App\Http\Requests\Requests\UserRequest;
 use Illuminate\Http\Request;
 use App\Services\UserService;
@@ -18,7 +19,7 @@ class UserController extends Controller
         Auth::setDefaultDriver('api');
         $this->userService = $_userService;
     }
-    public function register(Request $request)
+    public function register(UserRequest $request)
     {
         return $this->userService->register($request);
     }

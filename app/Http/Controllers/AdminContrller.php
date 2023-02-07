@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\Admin;
+use Helmesvs\Notify\Facades\Notify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -29,16 +32,18 @@ class AdminContrller extends Controller
         return view('admin.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         $data = [
             'username' => $request->username,
             'password' => $request->password
         ];
         if (Auth::attempt($data)) {
+            Notify::success('Đăng Nhập Thành Công');
             return redirect()->route('home.index');
         } else {
-            echo "sai thong tin va mat khau";
+            Notify::error('Sai thông tin và mật khẩu');
+            return redirect()->route('admin.create');
         }
     }
 
@@ -57,7 +62,7 @@ class AdminContrller extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AdminRequest $request)
     {
         try {
             $data = $request->all();

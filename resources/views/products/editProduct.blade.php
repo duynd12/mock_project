@@ -7,8 +7,8 @@
     <div class="form-group">
         <label for="exampleInputEmail1">Tên Sản Phẩm : </label>
         <input type="text" class="form-control" id="exampleInputEmail1" name="name" value="{{$data['name']}}">
-                @error('name')
-        <span style="color:red">{{$message}}</span>
+        @error('name')
+            <span style="color:red">{{$message}}</span>
         @enderror
     </div>
     <label for="cars" style="margin-bottom:10px;">Danh mục : </label>
@@ -70,7 +70,7 @@
     </div>
    <div class="form-group">
         <label for="exampleInputEmail1">Giảm Giá : </label>
-        <input type="text" class="form-control" id="exampleInputEmail1" name="discount">
+        <input type="number" class="form-control" id="exampleInputEmail1" name="discount">
     </div>
     
 

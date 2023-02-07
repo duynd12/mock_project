@@ -57,15 +57,20 @@
           <div class="form-outline mb-4">
             <input type="text" id="form3Example3" name="username" class="form-control form-control-lg"
                />
-            <label class="form-label" for="form3Example3">Email address</label>
+            <label class="form-label" for="form3Example3">Usernam</label>
           </div>
-
+          @error('username')
+            <span style="color:red">{{$message}}</span>
+          @enderror
           <!-- Password input -->
           <div class="form-outline mb-3">
             <input type="password" id="form3Example4" name="password" class="form-control form-control-lg"
                />
             <label class="form-label" for="form3Example4">Password</label>
           </div>
+          @error('password')
+            <span style="color:red">{{$message}}</span>
+          @enderror
 
           {{-- <div class="d-flex justify-content-between align-items-center">
             <!-- Checkbox -->

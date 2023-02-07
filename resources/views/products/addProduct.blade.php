@@ -7,6 +7,9 @@
     <div class="form-group">
         <label for="exampleInputEmail1">Tên Sản Phẩm : </label>
         <input type="text" class="form-control" id="exampleInputEmail1" name="name">
+        @error('name')
+        <span style="color:red">{{$message}}</span>
+        @enderror
     </div>
     <label for="cars" style="margin-bottom:10px;">Danh mục : </label>
     <select name="categories[]" id="cars" multiple multiselect-hide-x="true">
@@ -21,24 +24,39 @@
     <div class="form-group">
         <label for="exampleInputEmail1">Giá : </label>
         <input type="text" class="form-control" id="exampleInputEmail1" name="price">
+        @error('price')
+        <span style="color:red">{{$message}}</span>
+        @enderror
     </div>
     <label for="floatingTextarea2">Mô tả : </label>
    <div class="form-floating">
         <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" name="description"></textarea>
-   </div>
+        @error('description')
+        <span style="color:red">{{$message}}</span>
+        @enderror
+    </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Số lượng còn : </label>
         <input type="text" class="form-control" id="exampleInputEmail1" name="quantity">
+        @error('quantity')
+        <span style="color:red">{{$message}}</span>
+        @enderror
     </div>
      <div class="form-group">
         <label for="exampleInputEmail1">Giảm Giá : </label>
-        <input type="text" class="form-control" id="exampleInputEmail1" name="discount">
+        <input type="number" class="form-control" id="exampleInputEmail1" name="discount">
+        @error('discount')
+        <span style="color:red">{{$message}}</span>
+        @enderror
     </div>
     <div class="form-group">
         <!-- <input type="text" id="exampleInputEmail1" name="product_id" /> -->
         <label for="exampleInputEmail1">Ảnh Sản Phẩm : </label>
         <input type="file" id="exampleInputEmail1" name="images[]" multiple="true" />
     </div>
+    @error('images.*')
+    <span style="color:red">{{$message}}</span>
+    @enderror
     <div class="form-group">
         <!-- <input type="text" id="exampleInputEmail1" name="product_id" /> -->
         <label for="exampleInputEmail1">Size : </label>

@@ -40,6 +40,8 @@ class ProductService
             }
         };
     }
+
+
     public function getAttributeById($params, $id)
     {
         $data = DB::table('products as p')
@@ -59,7 +61,6 @@ class ProductService
     public function upLoadImage($images, $product_id)
     {
         $uploadPath = 'storage/uploads/';
-        // $images = $request->file('images');
         foreach ($images as $image) {
             $extention = $image->getClientOriginalExtension();
             $file_name = current(explode('.', $image->getClientOriginalName()));
@@ -149,6 +150,25 @@ class ProductService
         foreach ($data as $key => $value) {
             $array[] = $key;
         }
+        return $array;
+    }
+
+    public function getProductId($id)
+    {
+        $array = [];
+        $category_id = DB::table('category_products as cp')
+            ->join('categories as c', 'c.id', '=', 'cp.category_id')
+            ->join('products as p', 'p.id', '=', 'cp.product_id')
+            ->where('c.id', '=', $id)
+            ->select('p.id')
+            ->get()
+            ->keyBy('id')
+            ->toArray();
+
+        foreach ($category_id as $key => $value) {
+            $array[] = $key;
+        }
+
         return $array;
     }
 

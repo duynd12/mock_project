@@ -21,9 +21,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('orders', [OrderController::class, 'index']);
 Route::group(['middleware' => ['jwt.verify', 'auth:api']], function () {
-    Route::get('orders', [OrderController::class, 'index']);
     Route::get('user', [UserController::class, 'getAuthenticatedUser']);
+    Route::get('member/history', [OrderController::class, 'show']);
+
     Route::post('orders', [OrderController::class, 'store']);
     Route::put('member/edit', [ProfileController::class, 'update']);
 });

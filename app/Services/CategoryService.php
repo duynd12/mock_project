@@ -23,10 +23,11 @@ class CategoryService
     {
         try {
             DB::beginTransaction();
-            $data = $this->productService->getCategoryId($id);
+            $data = $this->productService->getProductId($id);
             $data_product = $request->only('products');
             $array_data = $request->all();
             $categories = Category::find($id);
+
 
             if (count($data_product) > 0) {
                 foreach ($data as $value) {
@@ -34,9 +35,9 @@ class CategoryService
                         $categories->products()->detach($value);
                     }
                 }
-
                 foreach ($data_product['products'] as $value) {
                     if (!in_array($value, $data)) {
+                        echo "array cu khong co san pham do " . $value;
                         $categories->products()->attach($value);
                     }
                 }

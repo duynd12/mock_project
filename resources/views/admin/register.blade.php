@@ -45,22 +45,34 @@
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
 
                   <div class="form-outline mb-4">
-                    <input type="text" id="form2Example17"  name="username" class="form-control form-control-lg" />
-                    <label class="form-label" for="form2Example17">Username</label>
-                  </div>
+                      <input type="text" id="form2Example17"  name="username" class="form-control form-control-lg" />
+                      <label class="form-label" for="form2Example17">Username</label>
+                    </div>
+                    @error('username')
+                    <span style="color:red">{{$message}}</span>
+                    @enderror
                 <div class="form-outline mb-4">
-                    <input type="text" id="form2Example17" name="password" class="form-control form-control-lg" />
+                    <input type="password" id="form2Example17" name="password" class="form-control form-control-lg" />
                     <label class="form-label"  for="form2Example17">Password</label>
                   </div>
+                    @error('password')
+                      <span style="color:red">{{$message}}</span>
+                      @enderror
                   <div class="form-outline mb-4">
-                    <input type="text" id="form2Example27" class="form-control form-control-lg" />
+                    <input type="password" id="form2Example27" name="password_confirmation" class="form-control form-control-lg" />
                     <label class="form-label"  for="form2Example27">Confirm Password</label>
                   </div>
+                    @error('password_confirmation')
+                      <span style="color:red">{{$message}}</span>
+                      @enderror
                     <label class="form-label"  for="form2Example27">Phân quyền</label>
-                     <select class="custom-select"> 
+                     <select class="custom-select" name="rule"> 
                           @foreach(App\Constants\Admin::RULE_ARRAY as $data)
                             <option value="{{$data}}">{{$data}}</option>
                          @endforeach  
+                      @error('rule')
+                      <span style="color:red">{{$message}}</span>
+                      @enderror
                     </select> 
                   <div class="pt-1 mb-4">
                     <button class="btn btn-dark btn-lg btn-block" type="submit">Đăng Kí</button>

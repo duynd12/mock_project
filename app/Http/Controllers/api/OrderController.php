@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\Product;
 use App\Models\Ship;
 use App\Models\User;
 use Carbon\Carbon;
@@ -22,9 +23,11 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $id = JWTAuth::user()->id;
-        $data = Order::with(['orderDetails'])->get()->find($id);
-        return response()->json(compact('data'));
+        // $id = JWTAuth::user()->id;
+        $data = Order::with(['orderDetails'])->get();
+        return response()->json([
+            'data' => $data
+        ]);
     }
 
     /**
@@ -37,7 +40,6 @@ class OrderController extends Controller
     {
 
         $id = JWTAuth::user()->id;
-
         $data = $request->all();
         try {
             DB::beginTransaction();
@@ -48,6 +50,10 @@ class OrderController extends Controller
                 'status' => "Đã hoàn thành"
             ]);
             foreach ($data['order_detail'] as $orderDetail) {
+                $product = Product::findOrFail($orderDetail['product_id']);
+
+                $quantity = $product['quantity'] - $orderDetail['quantity'];
+
                 OrderDetail::create([
                     'order_id' => $order->id,
                     'product_id' => $orderDetail['product_id'],
@@ -56,7 +62,12 @@ class OrderController extends Controller
                     'size' => $orderDetail['size'],
                     'color' => $orderDetail['color']
                 ]);
-            }
+                $product->update([
+                    'quantity' => $quantity,
+                ]);
+            };
+            // dd($product);
+
             $ships = $data['user_info'];
             Ship::create([
                 "order_id" => $order->id,
@@ -77,19 +88,15 @@ class OrderController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function show()
     {
-        $data = Order::with(['orderDetails'])->find($id)->pluck('user_id');
-        dd($data);
-        $products = User::whereIn('id', $data)->get();
-
-        dd($products);
+        $id = JWTAuth::user()->id;
+        $data = Order::with(['products', 'orderDetails'])->find($id);
+        return response()->json(
+            [
+                'data' => $data
+            ]
+        );
     }
 
     /**
