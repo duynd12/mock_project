@@ -5,11 +5,11 @@ namespace App\Services;
 use App\Models\AttributeProduct;
 use App\Models\Product;
 use App\Repositories\ImageRepository;
+use App\Repositories\OrderRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Support\Facades\DB;
 use Helmesvs\Notify\Facades\Notify as Notify;
 use Illuminate\Support\Facades\File;
-use PhpParser\Node\Stmt\Nop;
 
 class ProductService
 {
@@ -22,9 +22,11 @@ class ProductService
     public function __construct(
         ProductRepository $_productRepository,
         ImageRepository $_imageRepository,
+        OrderRepository $_orderRepository
     ) {
         $this->productRepository = $_productRepository;
         $this->imageRepository = $_imageRepository;
+        $this->orderRepository = $_orderRepository;
     }
     public function getSumOrder()
     {
