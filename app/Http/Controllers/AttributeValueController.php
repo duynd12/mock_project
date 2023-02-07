@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AttributeValueRequest;
 use App\Models\AttributeValue;
-use Attribute;
+use Helmesvs\Notify\Facades\Notify;
 use Illuminate\Http\Request;
 
 class AttributeValueController extends Controller
@@ -36,13 +37,19 @@ class AttributeValueController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id)
+    public function store(AttributeValueRequest $request, $id)
     {
         $data = $request['value_name'];
-        AttributeValue::create([
-            'attribute_id' => $id,
-            'value_name' => $data
-        ]);
+        try {
+            AttributeValue::create([
+                'attribute_id' => $id,
+                'value_name' => $data
+            ]);
+            Notify::success("Thêm thành công");
+            return redirect()->route('attributeValue.showformCreate');
+        } catch (\Exception $e) {
+            Notify::success("Thêm thất bại");
+        }
     }
 
     /**
@@ -78,7 +85,7 @@ class AttributeValueController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AttributeValueRequest $request, $id)
     {
         $data = $request->all();
         try {
@@ -99,6 +106,12 @@ class AttributeValueController extends Controller
      */
     public function destroy($id)
     {
-        AttributeValue::destroy($id);
+        try {
+            AttributeValue::destroy($id);
+            Notify::success("Xóa thành công");
+            return redirect()->back();
+        } catch (\Exception $e) {
+            Notify::success("Xóa thất bại");
+        }
     }
 }

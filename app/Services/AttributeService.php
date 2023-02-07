@@ -25,6 +25,17 @@ class AttributeService
         }
     }
 
+    public function updateAttribute($request, $id)
+    {
+        try {
+            $data = $request->all();
+            $this->attributeRepository->update($data, $id);
+            Notify::success('Sửa tên thuộc tính thành công');
+        } catch (\Exception $e) {
+            Notify::error($e->getMessage());
+        }
+    }
+
     public function getValueNameAttr($attr_name)
     {
         $data = DB::table('attribute_values as av')

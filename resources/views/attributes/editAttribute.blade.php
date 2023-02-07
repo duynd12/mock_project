@@ -11,6 +11,9 @@
     <div class="form-group">
         <label for="exampleInputEmail1">Tên thuộc tính : </label>
         <input type="text" class="form-control" id="exampleInputEmail1" value='{{$data['name']}}' name="name" aria-describedby="emailHelp">
+        @error('name')
+            <span style="color:red">{{$message}}</span>
+        @enderror
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>

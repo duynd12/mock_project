@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AttributeRequest;
 use App\Models\Attribute;
 use App\Repositories\AttributeRepository;
 use App\Services\AttributeService;
@@ -34,10 +35,10 @@ class AttributeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AttributeRequest $request)
     {
         $this->attributeService->createAttribute($request);
-        return redirect()->route('attribute.create');
+        return redirect()->back();
     }
 
     public function edit($id)
@@ -65,12 +66,17 @@ class AttributeController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AttributeRequest $request, $id)
     {
-        $data = $request->all();
-        Attribute::findOrFail($id)->update([
-            'name' => $data['name']
-        ]);
+        $this->attributeService->updateAttribute($request, $id);
+        return redirect()->route('attribute.edit');
+        // $data = $request->all();
+        // try{
+        //     Attribute::findOrFail($id)->update([
+        //         'name' => $data['name']
+        //     ]);
+
+        // }
     }
 
     /**

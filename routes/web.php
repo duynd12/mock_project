@@ -82,8 +82,8 @@ Route::get('sua-value-thuoc-tinh/{id}', [AttributeValueController::class, 'edit'
 Route::post('sua-value-thuoc-tinh/{id}', [AttributeValueController::class, 'update'])->name('attributeValue.update');
 Route::get('xoa-value-thuoc-tinh/{id}', [AttributeValueController::class, 'destroy'])->name('attributeValue.destroy');
 
-Route::get('sua-value-thuoc-tinh/{id}', [AttributeController::class, 'edit'])->name('attribute.edit');
-Route::post('sua-value-thuoc-tinh/{id}', [AttributeController::class, 'update'])->name('attribute.update');
+// Route::get('sua-thuoc-tinh/{id}', [AttributeController::class, 'edit'])->name('attribute.edit');
+// Route::post('sua-value-thuoc-tinh/{id}', [AttributeController::class, 'update'])->name('attribute.update');
 
 
 
