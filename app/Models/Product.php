@@ -27,6 +27,10 @@ class Product extends Model
     {
         return $this->belongsToMany(AttributeValue::class, 'attribute_products', 'product_id', 'attribute_value_id', 'id');
     }
+    // public function attributes()
+    // {
+    //     return $this->belongsToMany(AttributeValue::class, 'attribute_products', 'product_id', 'attribute_value_id', 'id');
+    // }
 
     public function getAttr($params = 'color', $id = '16')
     {

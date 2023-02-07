@@ -21,11 +21,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::put('member/edit', [ProfileController::class, 'update']);
 Route::group(['middleware' => ['jwt.verify', 'auth:api']], function () {
     Route::get('orders', [OrderController::class, 'index']);
     Route::get('user', [UserController::class, 'getAuthenticatedUser']);
     Route::post('orders', [OrderController::class, 'store']);
+    Route::put('member/edit', [ProfileController::class, 'update']);
 });
 Route::middleware('auth:sanctum')->get('/user1', function (Request $request) {
     return $request->user();

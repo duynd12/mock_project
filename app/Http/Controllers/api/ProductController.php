@@ -31,7 +31,7 @@ class ProductController extends Controller
         // $data = Product::paginate(\App\Constants\Product::PRODUCT_LIST_LIMIT);
 
         // $data = $this->productRepository->all();
-        $data = Product::with(['images', 'categories'])->paginate(2);
+        $data = Product::with(['images'])->paginate(20);
         return response()->json([
             'data' => $data,
         ]);

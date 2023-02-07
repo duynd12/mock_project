@@ -56,10 +56,10 @@ class ProductService
         return $data;
     }
 
-    public function upLoadImage($request, $product_id)
+    public function upLoadImage($images, $product_id)
     {
         $uploadPath = 'storage/uploads/';
-        $images = $request->file('images');
+        // $images = $request->file('images');
         foreach ($images as $image) {
             $extention = $image->getClientOriginalExtension();
             $file_name = current(explode('.', $image->getClientOriginalName()));
@@ -95,7 +95,7 @@ class ProductService
                 $this->updateCategory($product_id, $request['categories']);
             }
             if ($request->hasfile('images')) {
-                $this->upLoadImage($request, $product_id);
+                $this->upLoadImage($request->file('images'), $product_id);
             }
             if ($request['sizes']) {
                 $sizes = $request['sizes'];
@@ -120,15 +120,15 @@ class ProductService
         try {
             $product = $this->productRepository->find($id);
             foreach ($product->images as $image) {
-                dd($image_path = public_path('storage/uploads/' . $image->product_img));
+                $image_path = public_path('storage/uploads/' . $image->product_img);
                 if (File::exists($image_path)) {
                     File::delete($image_path);
                 }
             }
             $this->productRepository->delete($id);
             $product->categories()->detach($id);
+            $product->attributes()->detach($id);
 
-            // dd(1);
 
             Notify::success('Xóa sản phẩm thành công', $title = null, $options = []);
         } catch (\Exception $e) {
@@ -202,6 +202,9 @@ class ProductService
             if (isset($data['colors'])) {
                 $this->updateAttribute($id, $array_color, $data['colors']);
             };
+            if (isset($data['images'])) {
+                $this->upLoadImage($data['images'], $id);
+            }
 
             $this->productRepository->update([
                 'name' => $data['name'],

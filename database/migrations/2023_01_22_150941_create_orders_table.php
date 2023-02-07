@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Constants\Order as orderContants;
-
+use Carbon\Carbon;
 
 return new class extends Migration
 {
@@ -18,9 +18,10 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->float('total_price');
+            $table->integer('total_price');
             $table->string('status')->default(orderContants::STATUS_NAME);
-            $table->datetime('order_date');
+            $table->datetime('order_date')->default(Carbon::now());
+            $table->index(['id', 'user_id']);
             $table->timestamps();
         });
     }

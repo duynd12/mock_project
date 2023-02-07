@@ -22,6 +22,11 @@
     </select>
     <div class="form-group">
         <!-- <input type="text" id="exampleInputEmail1" name="product_id" /> -->
+        <label for="exampleInputEmail1">Ảnh Sản Phẩm : </label>
+        <input type="file" id="exampleInputEmail1" name="images[]" multiple="true" />
+    </div>
+    <div class="form-group">
+        <!-- <input type="text" id="exampleInputEmail1" name="product_id" /> -->
         <label for="exampleInputEmail1">Màu sắc : </label>
         <div class="checkbox">
             @foreach($colors as $color)

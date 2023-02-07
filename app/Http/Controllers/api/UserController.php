@@ -34,18 +34,12 @@ class UserController extends Controller
     }
     public function logout()
     {
-        // JWTAuth::logout();
-        // JWTAuth::invalidate(old token);
-        // dd(JWTAuth::gettoken());
+
         JWTAuth::invalidate(JWTAuth::getToken());
         return response()->json([
             'status' => 'success',
             'message' => 'Successfully logged out'
         ]);
-        // [
-        //     'data' => ['status' => 'success']
-        // ]
-        // );
     }
     /**
      * Display a listing of the resource.

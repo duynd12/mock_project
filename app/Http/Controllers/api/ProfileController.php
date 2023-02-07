@@ -4,7 +4,9 @@ namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Profile;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ProfileController extends Controller
@@ -54,26 +56,32 @@ class ProfileController extends Controller
         $user = JWTAuth::user();
         $user_id = $user->id;
         $data = $request->all();
-        // return response()->json($data);
-        $result = Profile::where('user_id', '=', $user_id)->update(
-            [
-                'name' => $data['name'],
-                'numberPhone' => $data['numberPhone'],
-                'address' => $data['address'],
-                'gender' => $data['gender'],
-                'dob' => $data['dob'],
-            ]
-        );
-        if ($result) {
+        try {
+            DB::beginTransaction();
+            User::findOrFail($user_id)->update(
+                [
+                    'name' => $data['name'],
+                ]
+            );
+            $result = Profile::where('user_id', '=', $user_id)->update(
+                [
+                    'numberPhone' => $data['numberPhone'],
+                    'address' => $data['address'],
+                    'gender' => $data['gender'],
+                    'dob' => $data['dob'],
+                ]
+            );
+            DB::commit();
             return response()->json(
                 [
                     'message' => 'update success'
                 ]
             );
-        } else {
+        } catch (\Exception $e) {
+            DB::rollback();
             return response()->json(
                 [
-                    'message' => 'update fail'
+                    'message' => $e->getMessage()
                 ]
             );
         }

@@ -32,11 +32,11 @@
                 <td>{{$data['name']}}</td>
                 <td>{{$attrValue['value_name']}}</td>
                 <td>
-                    <button class="btn btn-primary">
+                    {{-- <button class="btn btn-primary">
                         <a href="{{route('attributeValue.edit',$attrValue['id']) }}" style="color:white">
                             Edit
                         </a>
-                    </button>
+                    </button> --}}
                     <button class="btn btn-danger">
                         <a href="{{route('attributeValue.destroy',$attrValue['id']) }}" style="color:white">
                             Delete

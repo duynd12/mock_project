@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('username');
             $table->string('password');
             $table->string('rule')->default('Admin');
-            $table->index(['username', 'password']);
+            $table->index(['username', 'password', 'id']);
             $table->timestamps();
         });
     }

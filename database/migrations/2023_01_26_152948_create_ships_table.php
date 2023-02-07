@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('receiver');
             $table->string('delivery_phoneNumber');
             $table->string('delivery_email');
-            $table->json('shipping_address');
+            $table->string('shipping_address');
             $table->string('shipping_date')->nullable();
             $table->string('shipping_tracking')->default(orderContants::STATUS_NAME);
             $table->timestamps();

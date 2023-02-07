@@ -17,10 +17,11 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->float('price');
-            $table->integer('quantity');
-            $table->string('size');
-            $table->string('color');
+            $table->integer('price')->nullable();
+            $table->integer('quantity')->nullable();
+            $table->string('size')->nullable();
+            $table->string('color')->nullable();
+            $table->index(['id', 'order_id', 'product_id']);
             $table->timestamps();
         });
     }

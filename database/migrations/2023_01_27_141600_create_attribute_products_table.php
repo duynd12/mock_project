@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->bigInteger('attribute_value_id')->unsigned();
             $table->foreign('attribute_value_id')->references('id')->on('attribute_values')->onCascade('delete');
+            $table->index(['id', 'product_id']);
             $table->timestamps();
         });
     }
