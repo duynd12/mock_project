@@ -22,6 +22,7 @@
                 <th scope="col">Giá</th>
                 <th scope="col">Mô tả</th>
                 <th scope="col">Số lượng còn</th>
+                <th scope="col">Ảnh</th>
                 <th scope="col">Hanlde</th>
             </tr>
         </thead>
@@ -33,6 +34,13 @@
                 <td>{{$pro['price']}}</td>
                 <td>{{$pro['description']}}</td>
                 <td>{{$pro['quantity']}}</td>
+                <td>
+                    @foreach($pro->images as $image)
+                        <img src="{{asset('storage/uploads/'."$image->product_img")}}"
+                                style="max-width: 50px; max-heigh: 50px">
+                    @endforeach
+                </td>
+
                 <td>
                     <button class="btn btn-primary">
                         <a href="{{route('product.edit',$pro['id'])}}" style="color:white">

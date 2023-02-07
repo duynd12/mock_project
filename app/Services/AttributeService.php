@@ -25,11 +25,26 @@ class AttributeService
         }
     }
 
+    public function deleteAttribute($id)
+    {
+        try {
+            $this->attributeRepository->delete($id);
+            Notify::success('Xóa thành công');
+        } catch (\Exception $e) {
+            Notify::error($e->getMessage());
+        }
+    }
+
     public function updateAttribute($request, $id)
     {
         try {
             $data = $request->all();
-            $this->attributeRepository->update($data, $id);
+            $this->attributeRepository->update(
+                [
+                    'name' => $data['name'],
+                ],
+                $id
+            );
             Notify::success('Sửa tên thuộc tính thành công');
         } catch (\Exception $e) {
             Notify::error($e->getMessage());

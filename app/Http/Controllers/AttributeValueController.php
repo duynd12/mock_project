@@ -46,7 +46,7 @@ class AttributeValueController extends Controller
                 'value_name' => $data
             ]);
             Notify::success("Thêm thành công");
-            return redirect()->route('attributeValue.showformCreate');
+            return redirect()->back();
         } catch (\Exception $e) {
             Notify::success("Thêm thất bại");
         }
