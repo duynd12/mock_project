@@ -24,6 +24,7 @@ class UserService
                 'name' => $request->get('name'),
                 'email' => $request->get('email'),
                 'password' => Hash::make($request->get('password')),
+                'status' => 'block'
             ]);
             Profile::create(
                 [
@@ -52,6 +53,7 @@ class UserService
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
         $user = JWTAuth::user();
+        dd($user);
 
         return response()->json(compact('user', 'token'));
     }
