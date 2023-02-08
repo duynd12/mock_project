@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StatisticController;
+use App\Http\Controllers\UserController;
 use App\Models\Attribute;
 use App\Models\Category;
 use App\Models\Order;
@@ -37,6 +38,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('checklogin')->group(function () {
 
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
+    Route::get('users', [UserController::class, 'index'])->name('user.index');
 
     Route::controller(ProductController::class)->group(function () {
         Route::get('/product-manager', 'index')->name('product.index');
