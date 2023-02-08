@@ -90,34 +90,37 @@ Route::get('them-value-thuoc-tinh/{id}', [AttributeValueController::class, 'crea
 
 
 
-Route::get('test', function () {
-    $data = DB::table('order_details as od')
-        ->join('products as p', 'od.product_id', '=', 'p.id')
-        ->groupBy('od.product_id', 'p.name')
-        ->select('od.product_id', 'p.name', DB::raw('SUM(od.quantity) as total_quantity'))
-        ->get()
-        // ->first();
-        ->toArray();
-    // dd($data);
+// Route::get('test', function () {
+//     $data = DB::table('order_details as od')
+//         ->join('products as p', 'od.product_id', '=', 'p.id')
+//         ->groupBy('od.product_id', 'p.name')
+//         ->select('od.product_id', 'p.name', DB::raw('SUM(od.quantity) as total_quantity'))
+//         ->get()
+//         // ->first();
+//         ->toArray();
+//     // dd($data);
 
+//     dd($data);
 
-    $max_quantity = array_reduce($data, function ($carry, $item) {
-        return max($carry, $item->total_quantity);
-    });
-    $array = [];
-    foreach ($data as $product) {
-        if ($product->total_quantity == $max_quantity) {
-            $array[] = $product;
-        }
-    }
-    dd($array);
-    // $products = Product::find($data->product_id);
-    // dd($products);
+//     $max_quantity = array_reduce($data, function ($carry, $item) {
+//         return max($carry, $item->total_quantity);
+//     });
+//     dd($max_quantity);
+//     $array = [];
 
-    // dd($max_quantity);
-    // return max($max_quantity);
-    // return $data;
-});
+//     foreach ($data as $product) {
+//         if ($product->total_quantity == $max_quantity) {
+//             $array[] = $product;
+//         }
+//     }
+//     dd($array);
+//     // $products = Product::find($data->product_id);
+//     // dd($products);
+
+//     // dd($max_quantity);
+//     // return max($max_quantity);
+//     // return $data;
+// });
 // Route::get('userbuy', function () {
 //     $bestCustomer = DB::table('orders')
 //         ->select('user_id', DB::raw('SUM(total_price) as total_spending'))
@@ -127,7 +130,7 @@ Route::get('test', function () {
 //     $bestCustomerUser = DB::table('users as u')
 //         ->join('profiles as p', 'p.user_id', '=', 'u.id')
 //         ->where('id', $bestCustomer->user_id)->first();
-//     dd($bestCustomer);
+//     dd($bestCustomerUser);
 // });
 
 // Route::get('ordertoday', function (Request $request) {
@@ -143,22 +146,12 @@ Route::get('test', function () {
 // });
 
 // Route::get('test1', function () {
-//     $data =  DB::table('orders')
-//         ->selectRaw(" count(id) as So_luong_da_ban,
-// 	CASE
-//     	WHEN DAYOFWEEK(order_date) = '1' THEN 'Sunday'
-//         WHEN DAYOFWEEK(order_date) = '2' THEN 'Monday'
-//         WHEN DAYOFWEEK(order_date) = '3' THEN 'Tuesday'
-//         WHEN DAYOFWEEK(order_date) = '4' THEN 'Wednesday'
-//         WHEN DAYOFWEEK(order_date) = '5' THEN 'Thursday'
-//         WHEN DAYOFWEEK(order_date) = '6' THEN 'Friday'
-//         WHEN DAYOFWEEK(order_date) = '7' THEN 'Saturday'
-//         ELSE 'not a day of week'
-//     END AS day_of_week
-//     ")
-//         ->groupBy('day_of_week')
+//     $data = DB::table('order_details as od')
+//         ->join('products as p', 'od.product_id', '=', 'p.id')
+//         ->groupBy('od.product_id', 'p.name')
+//         ->select('od.product_id', 'p.name', DB::raw('SUM(od.quantity) as total_quantity'))
 //         ->get()
 //         ->toArray();
 
-//     dd($data);
+//     return $data;
 // });

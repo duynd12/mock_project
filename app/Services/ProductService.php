@@ -41,8 +41,9 @@ class ProductService
     public function updateCategory($id, $categories)
     {
 
-        $product = Product::find($id);
+        // $product = Product::find($id);
 
+        $product = $this->productRepository->find($id);
         // foreach ($this->getCategoryId($id) as $value) {
         //     if (!in_array($value, $categories)) {
         //         $product->categories()->detach($value);
@@ -250,6 +251,43 @@ class ProductService
 
     //     return $array;
     // }
+
+    //         $array = [];
+    //         foreach ($data as $product) {
+    //             if ($product->total_quantity == $max_quantity) {
+    //                 $array[] = $product;
+    //             }
+    //         }
+    //         dd($array);
+    //         // $products = Product::find($data->product_id);
+    //         // dd($products);
+
+    //         // dd($max_quantity);
+    //         // return max($max_quantity);
+    //         // return $data;
+    //     });
+    // }
+
+    public function getCustomerBuyMax()
+    {
+        $customer_buy = DB::table('orders')
+            ->select('user_id', DB::raw('SUM(total_price) as total_spending'))
+            ->groupBy('user_id')
+            ->orderBy('total_spending', 'desc')
+            ->first();
+
+        return $customer_buy;
+    }
+    public function getCustomerBuyInfo($data)
+    {
+
+        $customer_buy_info = DB::table('users as u')
+            ->join('profiles as p', 'p.user_id', '=', 'u.id')
+            ->where('id', $data->user_id)
+            ->first();
+
+        return $customer_buy_info;
+    }
 
     public function updateAttribute($id, $array_attr, $new_attr)
     {

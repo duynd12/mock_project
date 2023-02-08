@@ -48,8 +48,9 @@ class OrderService
             ->join('products as p', 'p.id', '=', 'od.product_id')
             ->where('o.id', '=', $id)
             ->where('o.status', '=', OrderContants::STATUS_NAME)
-            ->select('od.*', 'p.name')
+            ->select('od.*', 'p.name', 'o.total_price')
             ->get();
+
         return $data;
     }
 

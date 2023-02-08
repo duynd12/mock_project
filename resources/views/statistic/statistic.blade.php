@@ -34,12 +34,12 @@
                 border-radius: 10px;
                 box-shadow: 0px 5px 10px 0px rgba(0, 0, 0, 0.5)
       ">
-            <h3 class="info_name">Nguyen Van A</h3>
+            <h3 class="info_name">{{$customer_buy_info->name}}</h3>
             <div style="display:grid"> 
                 <span class="info_totalprice">
-                    Tổng tiền đã mua : 90000
+                    Tổng tiền đã mua : {{$customer_buy->total_spending}} VND
                 </span>
-                <span>Số điện thoại : 0912390123</span>
+                <span>Số điện thoại : {{$customer_buy_info->numberPhone!=null ? $customer_buy_info->numberPhone : ' chưa có'}}</span>
             </div>
       </div>
     </div>
