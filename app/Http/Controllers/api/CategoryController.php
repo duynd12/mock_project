@@ -18,9 +18,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $data = Category::with('products')
-            ->where('status', '=', 'Hiện')
-            ->paginate(CategoryConstants::LIMIT_SHOW);
+        $data = Category::with('products')->where('status', '=', 'Hiện')->get();
         return response()->json([
             'data' => $data,
         ]);
@@ -48,7 +46,7 @@ class CategoryController extends Controller
         $data = Category::find($id)->products->pluck('id');
         $products = Product::with('images')
             ->whereIn('id', $data)
-            ->paginate(20);
+            ->paginate(CategoryConstants::LIMIT_SHOW);
         return response()->json([
             'data' => $products,
         ]);
