@@ -53,12 +53,11 @@ class UserService
         }
 
         $user = JWTAuth::user();
-        // dd($user['status']);
-        // if ($user['status'] == 'block') {
-        //     return response()->json(
-        //         ['message' => "Tài khoản của bạn đã bị khóa"]
-        //     );
-        // }
+        if ($user['status'] == 'block') {
+            return response()->json(
+                ['message' => "Tài khoản của bạn đã bị khóa"]
+            );
+        }
         return response()->json(compact('user', 'token'));
     }
     public function getUser()
