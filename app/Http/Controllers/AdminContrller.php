@@ -87,28 +87,32 @@ class AdminContrller extends Controller
     {
         //
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit()
     {
-        //
+        return view('admin.changePassword');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $user = Auth::user();
+
+        $oldPassword = $request->oldPassword;
+        $newPassword = $user->newPassword;
+
+        $check = Hash::check($oldPassword, $newPassword);
+
+        if ($check) {
+        }
+        // dd(Hash::check($request->oldPassword, $user->password));
+
+
+        // if (Hash::check($request->oldPassword, $user->password)) {
+        //     $user->update(['password' => Hash::make($request->newPassword)]);
+        //     Auth::logout();
+        //     return redirect('/login')->with('success', 'Đổi mật khẩu thành công, vui lòng đăng nhập lại!');
+        // } else {
+        //     return redirect()->back()->with('error', 'Mật khẩu cũ không đúng!');
+        // }
     }
 
     /**

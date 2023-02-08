@@ -68,6 +68,8 @@ Route::middleware('checklogin')->group(function () {
     Route::get('thong-ke', [StatisticController::class, 'index'])->name('statistic.index');
 
     Route::get('chi-tiet-don-hang/{id}', [OrderController::class, 'show'])->name('order.show');
+    Route::get('doi-mat-khau', [AdminContrller::class, 'edit'])->name('admin.edit');
+    Route::post('doi-mat-khau', [AdminContrller::class, 'update'])->name('admin.update');
 });
 Route::controller(AdminContrller::class)->group(function () {
     Route::get('admin/login', 'create')->name('admin.create');

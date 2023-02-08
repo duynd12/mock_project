@@ -47,7 +47,7 @@
                         <a href="{{route('statistic.index')}}" aria-haspopup="true" aria-expanded="false">Thống kê chung</a>
                     </li>
                     <li class="menu-item-has-children1 dropdown">
-                        <a href="{{route('product.index')}}" aria-haspopup="true" aria-expanded="false">Đổi mật khẩu</a>
+                        <a href="{{route('admin.edit')}}" aria-haspopup="true" aria-expanded="false">Đổi mật khẩu</a>
                     </li>
 
                 </ul>
