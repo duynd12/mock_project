@@ -24,7 +24,6 @@ class UserService
                 'name' => $request->get('name'),
                 'email' => $request->get('email'),
                 'password' => Hash::make($request->get('password')),
-                'status' => 'block'
             ]);
             Profile::create(
                 [
@@ -52,9 +51,14 @@ class UserService
         } catch (JWTException $e) {
             return response()->json(['error' => 'could_not_create_token'], 500);
         }
-        $user = JWTAuth::user();
-        dd($user);
 
+        $user = JWTAuth::user();
+        // dd($user['status']);
+        // if ($user['status'] == 'block') {
+        //     return response()->json(
+        //         ['message' => "Tài khoản của bạn đã bị khóa"]
+        //     );
+        // }
         return response()->json(compact('user', 'token'));
     }
     public function getUser()
