@@ -3,30 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AdminRequest;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\LoginRequest;
 use App\Models\Admin;
 use Helmesvs\Notify\Facades\Notify;
+use Helmesvs\Notify\Notify as NotifyNotify;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class AdminContrller extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         return view('admin.login');
@@ -43,7 +37,7 @@ class AdminContrller extends Controller
             return redirect()->route('home.index');
         } else {
             Notify::error('Sai thông tin và mật khẩu');
-            return redirect()->route('admin.create');
+            return redirect()->back();
         }
     }
 
@@ -56,12 +50,7 @@ class AdminContrller extends Controller
     {
         return view('admin.register');
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(AdminRequest $request)
     {
         try {
@@ -77,12 +66,6 @@ class AdminContrller extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
@@ -92,27 +75,29 @@ class AdminContrller extends Controller
         return view('admin.changePassword');
     }
 
-    public function update(Request $request)
+    public function update(ChangePasswordRequest $request)
     {
         $user = Auth::user();
 
         $oldPassword = $request->oldPassword;
-        $newPassword = $user->newPassword;
+        $password = $request->password;
+        $password_hash = $user->password;
 
-        $check = Hash::check($oldPassword, $newPassword);
-
-        if ($check) {
+        $check = Hash::check($oldPassword, $password_hash);
+        try {
+            if ($check) {
+                Admin::where('id', '=', $user->id)
+                    ->update(['password' => Hash::make($password)]);
+                Notify::success('Đổi mật khẩu thành công');
+                return redirect()->back();
+            } else {
+                Notify::error('Mật khẩu cũ không đúng');
+                return redirect()->back();
+            }
+        } catch (\Exception $e) {
+            Notify::error('Đổi mật khẩu thất bại');
+            return redirect()->back();
         }
-        // dd(Hash::check($request->oldPassword, $user->password));
-
-
-        // if (Hash::check($request->oldPassword, $user->password)) {
-        //     $user->update(['password' => Hash::make($request->newPassword)]);
-        //     Auth::logout();
-        //     return redirect('/login')->with('success', 'Đổi mật khẩu thành công, vui lòng đăng nhập lại!');
-        // } else {
-        //     return redirect()->back()->with('error', 'Mật khẩu cũ không đúng!');
-        // }
     }
 
     /**

@@ -39,6 +39,8 @@
                 <td>{{$order->price}}</td>
                 <td>{{$order->quantity}}</td>
                 <td>{{$order->size}}</td>
+                <td>{{$order->color}}</td>
+
             </tr>
             @endforeach
         </tbody>

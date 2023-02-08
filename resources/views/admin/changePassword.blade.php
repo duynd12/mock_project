@@ -10,21 +10,14 @@
     @csrf
     <div class="form-group">
         <label for="exampleInputEmail1">Mật khẩu cũ:</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" name="oldPassword">
+        <input type="password" class="form-control" id="exampleInputEmail1" name="oldPassword">
         @error('name')
         <span style="color:red">{{$message}}</span>
         @enderror
     </div>
     <div class="form-group">
         <label for="exampleInputEmail1">Mật khẩu mới:</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" name="password">
-        @error('name')
-        <span style="color:red">{{$message}}</span>
-        @enderror
-    </div>
-     <div class="form-group">
-        <label for="exampleInputEmail1">Nhập lại mật khẩu mới:</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" name="password_confirmation">
+        <input type="password" class="form-control" id="exampleInputEmail1" name="password">
         @error('name')
         <span style="color:red">{{$message}}</span>
         @enderror
