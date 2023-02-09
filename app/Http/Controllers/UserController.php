@@ -3,15 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\UserService;
+use Helmesvs\Notify\Facades\Notify;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    private $userService;
+
+    public function __construct(UserService $_userService)
+    {
+        $this->userService = $_userService;
+    }
+
     public function index()
     {
         $users = User::with(['profiles'])->get();
@@ -70,7 +74,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return $this->userService->unlockOrLock($id);
     }
 
     /**

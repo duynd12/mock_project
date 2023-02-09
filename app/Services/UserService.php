@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Constants\User as UserConstants;
+use Helmesvs\Notify\Facades\Notify;
 
 class UserService
 {
@@ -79,5 +81,37 @@ class UserService
 
         $user = JWTAuth::user()->with(['profiles'])->get()->find($user->id);
         return response()->json(compact('user'));
+    }
+    public function changeStatus($user, $status, $id)
+    {
+        switch ($status) {
+            case UserConstants::STATUS_UNLOCK:
+
+                $user::where(UserConstants::PRiMARY_KEY, '=', $id)->update(
+                    [UserConstants::COUMNN_NAME => UserConstants::STATUS_LOCK]
+                );
+
+                Notify::success(UserConstants::NOTIFY_SUCCESS);
+                return redirect()->back();
+                break;
+            case UserConstants::STATUS_LOCK:
+
+                $user::where(UserConstants::PRiMARY_KEY, '=', $id)->update(
+                    [UserConstants::COUMNN_NAME => UserConstants::STATUS_UNLOCK]
+                );
+
+                Notify::warning(UserConstants::NOTIFY_ERROR);
+                return redirect()->back();
+                break;
+            default:
+                throw new \InvalidArgumentException;
+        }
+    }
+    public function unlockOrLock($id)
+    {
+        $user = $this->userRepository->find($id);
+        $status = $user[UserConstants::COUMNN_NAME];
+
+        return $this->changeStatus($user, $status, $user->id);
     }
 }

@@ -72,6 +72,9 @@ Route::middleware('checklogin')->group(function () {
     Route::get('chi-tiet-don-hang/{id}', [OrderController::class, 'show'])->name('order.show');
     Route::get('doi-mat-khau', [AdminContrller::class, 'edit'])->name('admin.edit');
     Route::post('doi-mat-khau', [AdminContrller::class, 'update'])->name('admin.update');
+
+    Route::get('user-unlock/{id}', [UserController::class, 'update'])->name('user.unlock');
+    Route::get('user-lock/{id}', [UserController::class, 'update'])->name('user.lock');
 });
 Route::controller(AdminContrller::class)->group(function () {
     Route::get('admin/login', 'create')->name('admin.create');
