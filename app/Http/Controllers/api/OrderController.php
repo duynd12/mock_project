@@ -76,7 +76,14 @@ class OrderController extends Controller
     public function show()
     {
         $id = JWTAuth::user()->id;
+        // $data = OrderDetail::with(['products'])->pluck('product_id');
+
+        // return response()->json(
+        //     ['data' => $data]
+        // );
         $data = Order::with(['products', 'orderDetails'])->find($id);
+        // ->whereIn('product_id', $data)
+        // ->find($id);
         return response()->json(
             [
                 'data' => $data

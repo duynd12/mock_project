@@ -13,7 +13,7 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $data = Category::with('products')->where(CategoryConstants::STATUS_NAME, '=', CategoryConstants::COLUMN_NAME)->get();
+        $data = Category::with('products')->where(CategoryConstants::COLUMN_NAME, '=', CategoryConstants::STATUS_NAME)->get();
         return response()->json([
             'data' => $data,
         ]);
