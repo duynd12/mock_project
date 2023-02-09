@@ -57,11 +57,10 @@ class ProductController extends Controller
         $param = $request->input('param');
         $data = Product::with(['images'])
             ->where('name', 'LIKE', '%' . $param . '%')
-            ->get();
-        if (count($data)) {
-            return response()->json($data);
-        } else {
-            return response()->json(['Data' => 'No Data not found'], 404);
-        }
+            ->paginate(ProductConstants::PRODUCT_LIST_LIMIT);
+
+        return response()->json([
+            'data' => $data,
+        ]);
     }
 }

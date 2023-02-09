@@ -81,7 +81,7 @@ class OrderController extends Controller
         // return response()->json(
         //     ['data' => $data]
         // );
-        $data = Order::with(['products', 'orderDetails'])->find($id);
+        $data = OrderDetail::with(['products', 'orderDetails'])->find($id);
         // ->whereIn('product_id', $data)
         // ->find($id);
         return response()->json(
