@@ -6,6 +6,7 @@ use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\ProfileController;
 use App\Http\Controllers\api\UserController;
 use App\Models\Order;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,6 +32,12 @@ Route::group(['middleware' => ['jwt.verify', 'auth:api']], function () {
 });
 Route::middleware('auth:sanctum')->get('/user1', function (Request $request) {
     return $request->user();
+});
+
+Route::patch('updateDiscount', function () {
+    return Product::where('name', 'like', '%CLOWNZ%')->update(
+        ['discount' => 10]
+    );
 });
 
 Route::post('register', [UserController::class, 'register']);
