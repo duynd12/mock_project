@@ -9,7 +9,7 @@
         <thead>
             <tr>
                 <th scope="col">id</th>
-                <th scope="col">UserName</th>
+                <th scope="col">Họ và tên</th>
                 <th scope="col">Email</th>
                 <th scope="col">Số điện thoại</th>
                 <th scope="col">Địa chỉ</th>

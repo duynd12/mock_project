@@ -71,8 +71,8 @@ class ProductController extends Controller
         $colors = $this->attributeService->getValueNameAttr(AttributeConstant::ATTRIBUTE_NAME_COLOR);
         $sizes = $this->attributeService->getValueNameAttr(AttributeConstant::ATTRIBUTE_NAME_SIZE);
 
-        $data['colors'] = $this->attributeService->getAttributeByIdPRoduct($id, AttributeConstant::ATTRIBUTE_NAME_COLOR);
-        $data['sizes'] = $this->attributeService->getAttributeByIdPRoduct($id, AttributeConstant::ATTRIBUTE_NAME_SIZE);
+        $data[ProductConstants::ATTRIBUTE_ARRAY_NAME_COLOR] = $this->attributeService->getAttributeByIdPRoduct($id, AttributeConstant::ATTRIBUTE_NAME_COLOR);
+        $data[ProductConstants::ATTRIBUTE_ARRAY_NAME_SIZE] = $this->attributeService->getAttributeByIdPRoduct($id, AttributeConstant::ATTRIBUTE_NAME_SIZE);
 
         return view('products.editProduct', [
             'data' => $data,

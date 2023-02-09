@@ -8,18 +8,22 @@ use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Constants\Category as CategoryConstants;
+use App\Services\ProductService;
 
 class CategoryController extends Controller
 {
     private $categoryRepository;
     private $categoryService;
+    private $productService;
 
     public function __construct(
         CategoryRepository $_categoryRepository,
-        CategoryService $_categoryService
+        CategoryService $_categoryService,
+        ProductService $_productService
     ) {
         $this->categoryRepository = $_categoryRepository;
         $this->categoryService = $_categoryService;
+        $this->productService = $_productService;
     }
 
     public function index()
@@ -47,16 +51,7 @@ class CategoryController extends Controller
     {
         $products = Product::all();
         $data = $this->categoryRepository->find($id);
-        $data['product_name'] = DB::table('category_products as cp')
-            ->join('categories as c', 'c.id', '=', 'cp.category_id')
-            ->join('products as p', 'p.id', '=', 'cp.product_id')
-            ->where('c.id', '=', $id)
-            ->select('p.id', 'p.name')
-            ->get()
-            // ->keyBy('name')
-            ->toArray();
-        // dd($data);
-        // dd($data['status']);
+        $data[CategoryConstants::KEY_NAME_ARRAY] = $this->productService->getProductName($id);
 
         return view('categories.editCategory', [
             'data' => $data,

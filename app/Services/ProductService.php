@@ -42,7 +42,6 @@ class ProductService
     {
 
         // $product = Product::find($id);
-
         $product = $this->productRepository->find($id);
         // foreach ($this->getCategoryId($id) as $value) {
         //     if (!in_array($value, $categories)) {
@@ -199,9 +198,7 @@ class ProductService
             $id_where = 'p.id';
             $id_select = 'c.id';
         }
-        $array_id = DB::table('category_products as cp')
-            ->join('categories as c', 'c.id', '=', 'cp.category_id')
-            ->join('products as p', 'p.id', '=', 'cp.product_id')
+        $array_id = $this->getJoinTableCategory()
             ->where($id_where, '=', $id)
             ->select($id_select)
             ->get()
@@ -211,8 +208,25 @@ class ProductService
         foreach ($array_id as $key => $value) {
             $array[] = $key;
         }
-        // dd($array);
         return $array;
+    }
+    public function getJoinTableCategory()
+    {
+        $data =  DB::table('category_products as cp')
+            ->join('categories as c', 'c.id', '=', 'cp.category_id')
+            ->join('products as p', 'p.id', '=', 'cp.product_id');
+
+        return $data;
+    }
+
+    public function getProductName($id)
+    {
+        $data = $this->getJoinTableCategory()
+            ->where('c.id', '=', $id)
+            ->select('p.id', 'p.name')
+            ->get()
+            ->toArray();
+        return $data;
     }
     // public function getProductId($id)
     // {
@@ -233,40 +247,6 @@ class ProductService
     //     return $array;
     // }
 
-    // public function getCategoryId($id)
-    // {
-    //     $array = [];
-    //     $category_id = DB::table('category_products as cp')
-    //         ->join('categories as c', 'c.id', '=', 'cp.category_id')
-    //         ->join('products as p', 'p.id', '=', 'cp.product_id')
-    //         ->where('p.id', '=', $id)
-    //         ->select('c.id')
-    //         ->get()
-    //         ->keyBy('id')
-    //         ->toArray();
-
-    //     foreach ($category_id as $key => $value) {
-    //         $array[] = $key;
-    //     }
-
-    //     return $array;
-    // }
-
-    //         $array = [];
-    //         foreach ($data as $product) {
-    //             if ($product->total_quantity == $max_quantity) {
-    //                 $array[] = $product;
-    //             }
-    //         }
-    //         dd($array);
-    //         // $products = Product::find($data->product_id);
-    //         // dd($products);
-
-    //         // dd($max_quantity);
-    //         // return max($max_quantity);
-    //         // return $data;
-    //     });
-    // }
 
     public function getCustomerBuyMax()
     {

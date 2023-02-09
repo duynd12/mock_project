@@ -13,13 +13,10 @@ use App\Constants\Product as ProductConstants;
 
 class ProductController extends Controller
 {
-    private $productRepository;
     private $productService;
     public function __construct(
-        ProductRepository $_productRepository,
         ProductService $_productService
     ) {
-        $this->productRepository = $_productRepository;
         $this->productService = $_productService;
     }
     public function index()
@@ -38,8 +35,8 @@ class ProductController extends Controller
     public function show($id)
     {
         $data = Product::with(['images'])->get()->find($id);
-        $data['sizes'] = $this->productService->getAttribute(ProductConstants::PRODUCT_VALUE_SIZE, $id);
-        $data['colors'] = $this->productService->getAttribute(ProductConstants::PRODUCT_VALUE_COLOR, $id);
+        $data[ProductConstants::ATTRIBUTE_ARRAY_NAME_SIZE] = $this->productService->getAttribute(ProductConstants::PRODUCT_VALUE_SIZE, $id);
+        $data[ProductConstants::ATTRIBUTE_ARRAY_NAME_COLOR] = $this->productService->getAttribute(ProductConstants::PRODUCT_VALUE_COLOR, $id);
 
         return response()->json([
             'data' => $data,

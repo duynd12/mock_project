@@ -6,6 +6,7 @@ use App\Models\Ship;
 use Illuminate\Support\Facades\DB;
 use App\Constants\Order as orderContants;
 use App\Repositories\OrderRepository;
+use Carbon\Carbon;
 
 class OrderService
 {
@@ -148,5 +149,19 @@ class OrderService
     {
         $data = $this->orderRepository->searchWithTime($array);
         return $data;
+    }
+
+    public function getDate($request)
+    {
+        $date = [
+            'start_date' => Carbon::today()->startOfDay(),
+            'end_date' => Carbon::today()->endOfDay()
+        ];
+
+        if ($request['start_date'] && $request['end_date']) {
+            $date = $request->all();
+        };
+
+        return $date;
     }
 }

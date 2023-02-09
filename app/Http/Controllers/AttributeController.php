@@ -7,6 +7,7 @@ use App\Models\Attribute;
 use App\Repositories\AttributeRepository;
 use App\Services\AttributeService;
 use Illuminate\Http\Request;
+use App\Constants\Attribute as AttributeConstants;
 
 class AttributeController extends Controller
 {
@@ -23,7 +24,7 @@ class AttributeController extends Controller
     }
     public function index()
     {
-        $data = Attribute::paginate(5);
+        $data = Attribute::paginate(AttributeConstants::ATTRIBUTE_VALUE_LIMIT_SHOW);
         return view('attributes.attributeManager', ['data' => $data]);
     }
     public function create()

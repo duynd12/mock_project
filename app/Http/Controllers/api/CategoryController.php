@@ -11,65 +11,35 @@ use App\Constants\Category as CategoryConstants;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        $data = Category::with('products')->where('status', '=', 'Hiện')->get();
+        $data = Category::with('products')->where(CategoryConstants::STATUS_NAME, '=', CategoryConstants::COLUMN_NAME)->get();
         return response()->json([
             'data' => $data,
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  string  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        $data = Category::find($id)->products->pluck('id');
+        $id_category = Category::find($id)->products->pluck('id');
         $products = Product::with('images')
-            ->whereIn('id', $data)
+            ->whereIn('id', $id_category)
             ->paginate(CategoryConstants::LIMIT_SHOW);
         return response()->json([
             'data' => $products,
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
     }

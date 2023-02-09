@@ -55,9 +55,9 @@ class UserService
         }
 
         $user = JWTAuth::user();
-        if ($user['status'] == 'block') {
+        if ($user[UserConstants::COUMNN_NAME] == UserConstants::STATUS_UNLOCK) {
             return response()->json(
-                ['message' => "Tài khoản của bạn đã bị khóa"]
+                ['message' => UserConstants::MESSAGE_BLOCK]
             );
         }
         return response()->json(compact('user', 'token'));

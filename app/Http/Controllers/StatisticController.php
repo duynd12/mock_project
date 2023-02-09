@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Services\OrderService;
 use App\Services\ProductService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class StatisticController extends Controller
 {

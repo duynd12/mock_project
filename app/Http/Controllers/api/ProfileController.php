@@ -13,7 +13,6 @@ class ProfileController extends Controller
 {
     public function index()
     {
-        $id = JWTAuth::user()->id;
     }
 
     public function store(Request $request)
