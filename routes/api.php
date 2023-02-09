@@ -34,8 +34,8 @@ Route::middleware('auth:sanctum')->get('/user1', function (Request $request) {
     return $request->user();
 });
 
-Route::patch('updateDiscount', function () {
-    return Product::where('name', 'like', '%CLOWNZ%')->update(
+Route::patch('updateDiscount/{name}', function ($name) {
+    return Product::where('name', 'like', '%' . $name . '%')->update(
         ['discount' => 10]
     );
 });
