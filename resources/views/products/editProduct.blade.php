@@ -70,7 +70,7 @@
     </div>
    <div class="form-group">
         <label for="exampleInputEmail1">Giảm Giá : </label>
-        <input type="number" class="form-control" id="exampleInputEmail1" name="discount">
+        <input type="number" value={{$data['discount']}} class="form-control" id="exampleInputEmail1" name="discount">
     </div>
     
 

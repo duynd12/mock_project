@@ -20,6 +20,7 @@
                 <th scope="col">id</th>
                 <th scope="col">Tên sản phẩm</th>
                 <th scope="col">Giá</th>
+                <th scope="col">Giảm Giá</th>
                 <th scope="col">Mô tả</th>
                 <th scope="col">Số lượng còn</th>
                 <th scope="col">Ảnh</th>
@@ -32,6 +33,7 @@
                 <th scope="row">{{$pro['id']}}</th>
                 <td>{{$pro['name']}}</td>
                 <td>{{$pro['price']}}</td>
+                <td>{{$pro['discount']}} %</td>
                 <td>{{$pro['description']}}</td>
                 <td>{{$pro['quantity']}}</td>
                 <td>

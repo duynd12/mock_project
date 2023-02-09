@@ -116,7 +116,7 @@ class ProductService
     {
         try {
             DB::beginTransaction();
-            $data = $request->only(['name', 'price', 'description', 'quantity']);
+            $data = $request->only(['name', 'price', 'description', 'quantity', 'discount']);
             $reslut = $this->productRepository->create($data);
             $product_id = $reslut->id;
 
@@ -308,6 +308,7 @@ class ProductService
                 'price' => $data['price'],
                 'description' => $data['description'],
                 'quantity' => $data['quantity'],
+                'discount' => $data['discount'],
             ], $id);
             DB::commit();
             Notify::success('Sua san pham thanh cong');

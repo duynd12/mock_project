@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class Product extends Model
 {
     use HasFactory;
-    protected $fillable = ['id', 'name', 'price', 'discount', 'description', 'quantity'];
+    protected $fillable = ['id', 'name', 'price', 'discount', 'description', 'quantity', 'discount'];
 
     // public function attributes()
     // {
