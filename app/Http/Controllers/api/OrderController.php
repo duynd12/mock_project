@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Product;
 use App\Models\Ship;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -75,18 +76,21 @@ class OrderController extends Controller
 
     public function show()
     {
-        $id = JWTAuth::user()->id;
-        // $data = OrderDetail::with(['products'])->pluck('product_id');
+        $user_id = JWTAuth::user()->id;
+        $orders_id = Order::where('user_id', '=', $user_id)->pluck('id');
 
-        // return response()->json(
-        //     ['data' => $data]
-        // );
-        $data = OrderDetail::with(['products', 'orderDetails'])->find($id);
-        // ->whereIn('product_id', $data)
-        // ->find($id);
+        $product_id = OrderDetail::with(['products'])
+            ->whereIn('order_id', $orders_id)
+            ->pluck('product_id');
+
+
+        $product = Product::with(['images', 'orderDetails'])
+            ->whereIn('id', $product_id)
+            ->get();
+
         return response()->json(
             [
-                'data' => $data
+                'data' => $product
             ]
         );
     }
