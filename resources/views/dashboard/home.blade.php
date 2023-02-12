@@ -4,13 +4,16 @@
 <div class="row">
     <div class="col-lg-3 col-md-6">
         <div class="card">
-            {{-- style="background:#00c292" --}}
+            {{-- style="background:#03a9f3" --}}
             <div class="card-body">
                 <div class="stat-widget-five">
+                    <div class="stat-icon dib flat-color-3">
+                            <i class="fa-solid fa-dollar-sign"></i>
+                    </div>
                     <div class="stat-content">
                         <div class="text-left dib">
-                            <div class="stat-text"><span class="count">{{$total_price}} </span></div>
-                            <div class="stat-heading">Total Price</div>
+                            <div class="stat-text"><span class="count">{{$total_price}}</span> VND</div>
+                            <div class="stat-heading">Tổng tiền</div>
                         </div>
                     </div>
                 </div>
@@ -24,7 +27,7 @@
             <div class="card-body">
                 <div class="stat-widget-five">
                     <div class="stat-icon dib flat-color-2">
-                        <i class="pe-7s-cart"></i>
+                        <i class="fa-solid fa-user"></i>
                     </div>
                     <div class="stat-content">
                         <div class="text-left dib">
@@ -42,6 +45,7 @@
                 <div class="stat-widget-five">
                     <div class="stat-icon dib flat-color-1">
                         <i class="pe-7s-cash"></i>
+                        <i class="fa-sharp fa-solid fa-shirt"></i>
                     </div>
                     <div class="stat-content">
                         <div class="text-left dib">
@@ -58,7 +62,7 @@
             <div class="card-body">
                 <div class="stat-widget-five">
                     <div class="stat-icon dib flat-color-1">
-                        <i class="pe-7s-cash"></i>
+                        <i class="fa-sharp fa-solid fa-file-invoice-dollar" style="color:#f1c26a"></i>                    
                     </div>
                     <div class="stat-content">
                         <div class="text-left dib">
