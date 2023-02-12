@@ -6,25 +6,31 @@ use App\Models\Category;
 use App\Repositories\CategoryRepository;
 use Helmesvs\Notify\Facades\Notify;
 use Illuminate\Support\Facades\DB;
+use App\Constants\Category as CategoryConstants;
+use App\Constants\Notify as NotifyConstants;
 
 class CategoryService
 {
     private $categoryRepository;
     private $productService;
+    private $categoryConstants;
 
     public function __construct(
         CategoryRepository $_categoryRepository,
-        ProductService $_productService
+        ProductService $_productService,
+        CategoryConstants $_categoryConstants
     ) {
         $this->categoryRepository = $_categoryRepository;
         $this->productService = $_productService;
+        $this->categoryConstants = $_categoryConstants;
     }
     public function createCategory($request)
     {
         try {
             $data = $request->only('title', 'status');
             $this->categoryRepository->create($data);
-            Notify::success('Them thanh cong');
+            $this->categoryConstants->setHandle(NotifyConstants::ADD);
+            Notify::success($this->categoryConstants->getNotifySuccess());
         } catch (\Exception $e) {
             Notify::error($e->getMessage());
         }
@@ -74,7 +80,8 @@ class CategoryService
             $category->delete();
             $category->products()->detach($id);
             DB::commit();
-            Notify::success('Them thanh cong');
+            $this->categoryConstants->setHandle(NotifyConstants::DELETE);
+            Notify::success($this->categoryConstants->getNotifySuccess());
         } catch (\Exception $e) {
             DB::rollBack();
             Notify::error($e->getMessage());

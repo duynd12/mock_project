@@ -4,7 +4,6 @@
 <div class="row">
     <div class="col-lg-3 col-md-6">
         <div class="card">
-            {{-- style="background:#03a9f3" --}}
             <div class="card-body">
                 <div class="stat-widget-five">
                     <div class="stat-icon dib flat-color-3">
@@ -23,7 +22,6 @@
 
     <div class="col-lg-3 col-md-6">
         <div class="card">
-            {{-- style="background:#03a9f3" --}}
             <div class="card-body">
                 <div class="stat-widget-five">
                     <div class="stat-icon dib flat-color-2">

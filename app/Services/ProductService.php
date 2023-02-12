@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Constants\Product as ProductConstants;
 use App\Models\AttributeProduct;
 use App\Models\Product;
 use App\Repositories\ImageRepository;
@@ -10,6 +11,7 @@ use App\Repositories\ProductRepository;
 use Illuminate\Support\Facades\DB;
 use Helmesvs\Notify\Facades\Notify as Notify;
 use Illuminate\Support\Facades\File;
+use App\Constants\Notify as NotifyConstants;
 
 class ProductService
 {
@@ -17,16 +19,20 @@ class ProductService
     private $productRepository;
     private $imageRepository;
     private $orderRepository;
+    private $productConstants;
+
 
 
     public function __construct(
         ProductRepository $_productRepository,
         ImageRepository $_imageRepository,
-        OrderRepository $_orderRepository
+        OrderRepository $_orderRepository,
+        ProductConstants $_productConstants
     ) {
         $this->productRepository = $_productRepository;
         $this->imageRepository = $_imageRepository;
         $this->orderRepository = $_orderRepository;
+        $this->productConstants = $_productConstants;
     }
     public function getSumOrder()
     {
@@ -41,18 +47,7 @@ class ProductService
     public function updateCategory($id, $categories)
     {
 
-        // $product = Product::find($id);
         $product = $this->productRepository->find($id);
-        // foreach ($this->getCategoryId($id) as $value) {
-        //     if (!in_array($value, $categories)) {
-        //         $product->categories()->detach($value);
-        //     }
-        // }
-        // foreach ($categories as $category) {
-        //     if (!in_array($category, $this->getCategoryId($id))) {
-        //         $product->categories()->attach($category);
-        //     }
-        // };
 
         foreach ($this->getIdCateOrProduct('category', $id) as $value) {
             if (!in_array($value, $categories)) {
@@ -114,6 +109,7 @@ class ProductService
     }
     public function createProduct($request)
     {
+        $this->productConstants->setHandle(NotifyConstants::ADD);
         try {
             DB::beginTransaction();
             $data = $request->only(['name', 'price', 'description', 'quantity', 'discount']);
@@ -136,10 +132,10 @@ class ProductService
             }
 
             DB::commit();
-            Notify::success('Thêm sản phẩm thành công', $title = null, $options = []);
+            Notify::success($this->productConstants->getNotifySuccess());
         } catch (\throwable $th) {
             throw $th;
-            Notify::error('Thêm sản phẩm thất bại', $title = null, $options = []);
+            Notify::error($this->productConstants->getNotifyError(), $title = null, $options = []);
             DB::rollback();
         }
     }
@@ -152,6 +148,8 @@ class ProductService
     }
     public function deleteProduct($id)
     {
+        $this->productConstants->setHandle(NotifyConstants::DELETE);
+
         try {
             $product = $this->productRepository->find($id);
             foreach ($product->images as $image) {
@@ -161,10 +159,10 @@ class ProductService
             $product->categories()->detach($id);
             $product->attributes()->detach($id);
 
-            Notify::success('Xóa sản phẩm thành công', $title = null, $options = []);
+            Notify::success($this->productConstants->getNotifySuccess(), $title = null, $options = []);
         } catch (\Exception $e) {
             throw new \Exception($e->getMessage());
-            Notify::error('Xóa sản phẩm thất bại', $title = null, $options = []);
+            Notify::error($this->productConstants->getNotifyError(), $title = null, $options = []);
         }
     }
     public function getProductById($id)
@@ -172,20 +170,6 @@ class ProductService
         return $this->productRepository->find($id);
     }
 
-    // 11h00 7022023
-    // public function getArrayAttribute($attr, $id)
-    // {
-    //     $array = [];
-
-    //     $data = $this->getAttributeById($attr, $id);
-
-    //     foreach ($data as $key => $value) {
-    //         $array[] = $key;
-    //     }
-    //     return $array;
-    // }
-
-    // 7/02/2023 test
     public function getIdCateOrProduct($keyword, $id)
     {
         $array = [];
@@ -228,25 +212,6 @@ class ProductService
             ->toArray();
         return $data;
     }
-    // public function getProductId($id)
-    // {
-    //     $array = [];
-    //     $category_id = DB::table('category_products as cp')
-    //         ->join('categories as c', 'c.id', '=', 'cp.category_id')
-    //         ->join('products as p', 'p.id', '=', 'cp.product_id')
-    //         ->where('c.id', '=', $id)
-    //         ->select('p.id')
-    //         ->get()
-    //         ->keyBy('id')
-    //         ->toArray();
-
-    //     foreach ($category_id as $key => $value) {
-    //         $array[] = $key;
-    //     }
-
-    //     return $array;
-    // }
-
 
     public function getCustomerBuyMax()
     {
@@ -286,6 +251,8 @@ class ProductService
     }
     public function updateProduct(array $data, $id)
     {
+        $this->productConstants->setHandle(NotifyConstants::UPDATE);
+
         try {
             DB::beginTransaction();
             $array_size = $this->getAttributeById('size', $id);
@@ -311,7 +278,7 @@ class ProductService
                 'discount' => $data['discount'],
             ], $id);
             DB::commit();
-            Notify::success('Sua san pham thanh cong');
+            Notify::success($this->productConstants->getNotifySuccess());
         } catch (\Exception $e) {
             DB::commit();
             Notify::success($e->getMessage());

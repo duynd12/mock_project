@@ -5,21 +5,26 @@ namespace App\Services;
 use App\Repositories\AttributeRepository;
 use Helmesvs\Notify\Facades\Notify;
 use Illuminate\Support\Facades\DB;
+use App\Constants\Notify as NotifyConstants;
+use App\Constants\Attribute as AttributeConstants;
 
 class AttributeService
 {
     private $attributeRepository;
+    private $attributeConstants;
 
-    public function __construct(AttributeRepository $_attributeRepository)
+    public function __construct(AttributeRepository $_attributeRepository, AttributeConstants $_attributeConstants)
     {
         $this->attributeRepository = $_attributeRepository;
+        $this->attributeConstants = $_attributeConstants;
     }
     public function createAttribute($request)
     {
+        $this->attributeConstants->setHandle(NotifyConstants::ADD);
         try {
             $data = $request->all();
             $this->attributeRepository->create($data);
-            Notify::success('Them thanh cong');
+            Notify::success($this->attributeConstants->getNotifySuccess());
         } catch (\Exception $e) {
             Notify::error($e->getMessage());
         }
@@ -27,9 +32,10 @@ class AttributeService
 
     public function deleteAttribute($id)
     {
+        $this->attributeConstants->setHandle(NotifyConstants::DELETE);
         try {
             $this->attributeRepository->delete($id);
-            Notify::success('Xóa thành công');
+            Notify::success($this->attributeConstants->getNotifySuccess());
         } catch (\Exception $e) {
             Notify::error($e->getMessage());
         }
@@ -37,6 +43,7 @@ class AttributeService
 
     public function updateAttribute($request, $id)
     {
+        $this->attributeConstants->setHandle(NotifyConstants::UPDATE);
         try {
             $data = $request->all();
             $this->attributeRepository->update(
@@ -45,7 +52,7 @@ class AttributeService
                 ],
                 $id
             );
-            Notify::success('Sửa tên thuộc tính thành công');
+            Notify::success($this->attributeConstants->getNotifySuccess());
         } catch (\Exception $e) {
             Notify::error($e->getMessage());
         }

@@ -22,9 +22,9 @@ class AttributeValueService
                     'value_name' => $data
                 ]
             );
-            Notify::success("Thêm thành công");
+            Notify::success("Thêm value thuộc tính thành công");
         } catch (\Exception $e) {
-            Notify::success("Thêm thất bại");
+            Notify::success($e->getMessage());
         }
     }
 
@@ -35,7 +35,7 @@ class AttributeValueService
             $this->attributeValueRepository->update([
                 'value_name' => $data['value_name'],
             ], $id);
-            Notify::success("Sua value thanh cong");
+            Notify::success("Sửa value thuộc tính thành công");
         } catch (\Exception $e) {
             Notify::success($e->getMessage());
         }
@@ -47,7 +47,7 @@ class AttributeValueService
             $this->attributeValueRepository->delete($id);
             Notify::success("Xóa thành công");
         } catch (\Exception $e) {
-            Notify::success("Xóa thất bại");
+            Notify::success($e->getMessage());
         }
     }
 }
