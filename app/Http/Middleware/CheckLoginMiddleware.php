@@ -21,6 +21,5 @@ class CheckLoginMiddleware
             return $next($request);
         }
         return redirect()->route('admin.create');
-        // return $next($request);
     }
 }

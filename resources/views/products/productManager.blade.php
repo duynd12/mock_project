@@ -4,11 +4,14 @@
 <div class="product-manager">
     <div class="product-manager-title">
         <h1>Quản lý sản phẩm</h1>
+        @if(Auth::user()->rule !== __(\App\Constants\Admin::ROLE_VIEW))
+
         <button class="btn btn-outline-primary">
             <a href="{{route('product.create')}}">
                 Thêm sản phẩm
             </a>
         </button>
+        @endif
     </div>
     <table class="table table-bordered">
         <thead>
@@ -20,7 +23,9 @@
                 <th scope="col">Mô tả</th>
                 <th scope="col">Số lượng còn</th>
                 <th scope="col">Ảnh</th>
+                @if(Auth::user()->rule === __(\App\Constants\Admin::ROLE_GOVERNOR))
                 <th scope="col">Hanlde</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -38,6 +43,7 @@
                                 style="max-width: 50px; max-heigh: 50px">
                     @endforeach
                 </td>
+                @if(Auth::user()->rule === __(\App\Constants\Admin::ROLE_GOVERNOR))
                 <td style="display:flex">
                     <button class="btn btn-primary" style="margin-right:10px">
                         <a href="{{route('product.edit',$pro['id'])}}" style="color:white">
@@ -52,6 +58,7 @@
                         </button>
                     </form>
                 </td>
+                @endif
             </tr>
             @endforeach
         </tbody>

@@ -1,7 +1,13 @@
 @extends('index')
 
 @section('content')
-<h1 class="title">Thêm Sản Phẩm</h1>
+<div class="title" style="display:flex">
+    <a href="{{route('product.index')}}">
+        <i class="fa-solid fa-arrow-left"></i>
+        Quay Lại
+    </a>
+    <h4 style="margin-left:10px;margin-top:-5px">Thêm Sản Phẩm</h4>
+</div>
 <form action="{{route('prodcut.store')}}" method="post" accept="image/*" enctype="multipart/form-data">
     @csrf
     <div class="form-group">

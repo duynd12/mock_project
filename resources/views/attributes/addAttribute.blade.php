@@ -5,7 +5,13 @@
 @endpush
 
 @section('content')
-<h1>Thêm thuộc tính</h1>
+<div class="title" style="display:flex">
+    <a href="{{route('attribute.index')}}">
+        <i class="fa-solid fa-arrow-left"></i>
+        Quay Lại
+    </a>
+    <h4 style="margin-left:10px;margin-top:-5px">Thêm thuộc tính</h4>
+</div>
 <form action="{{route('attribute.store')}}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="form-group">

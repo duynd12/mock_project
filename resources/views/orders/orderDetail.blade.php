@@ -3,7 +3,13 @@
 @section('content')
 <div class="product-manager">
     <div class="product-manager-title">
-        <h3>Chi tiết đơn hàng</h3>
+        <div class="title" style="display:flex">
+        <a href="{{route('order.index')}}">
+            <i class="fa-solid fa-arrow-left"></i>
+            Quay Lại
+        </a>
+        <h4 style="margin-left:10px;margin-top:-5px">Chi tiết đơn hàng</h4>
+        </div>
     </div>
     <hr>
     <div class="container" style="margin-bottom:20px">

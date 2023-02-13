@@ -1,7 +1,13 @@
 @extends('index')
 
 @section('content')
-<h1 class="title">Sửa Sản Phẩm</h1>
+<div class="title" style="display:flex">
+    <a href="{{route('product.index')}}">
+        <i class="fa-solid fa-arrow-left"></i>
+        Quay Lại
+    </a>
+    <h4 style="margin-left:10px;margin-top:-5px">Sửa Sản Phẩm</h4>
+</div>
 <form method="post" enctype="multipart/form-data" action="{{route('product.update',$data['id'])}}">
     @csrf
     @method('PATCH')

@@ -6,12 +6,15 @@
     <div class="category-manager-title">
         <h1>Quản lý  Thuộc tính </h1>
         <div class="button" style="float: right;">
+        @if(Auth::user()->rule !== __(\App\Constants\Admin::ROLE_VIEW))
+
             <button class="btn btn-outline-primary">
                 <a href="{{route('attribute.create')}}">
                     Thêm  thuộc tính 
                 </a>
             </button>
         </div>
+        @endif
     </div>
     <table class="table table-bordered">
         <thead>
@@ -34,6 +37,7 @@
                             Xem chi tiết
                         </a>
                     </button>
+                @if(Auth::user()->rule === __(\App\Constants\Admin::ROLE_GOVERNOR))
                      <button class="btn btn-outline-primary" style="margin-right:10px;margin-left:10px">        
                             <a href="{{route('attribute.edit',$attr['id']) }}">
                                 Edit
@@ -46,6 +50,7 @@
                             DELETE
                         </button>
                     </form>
+                    @endif
                 </td>
             </tr>
             @endforeach

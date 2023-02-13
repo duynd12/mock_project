@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Redirect;
 
 class CheckRuleMiddleware
 {
-    private static $rule = 'Admin';
+    private static $rule = 'governor';
 
     /**
      * Handle an incoming request.
@@ -24,7 +24,5 @@ class CheckRuleMiddleware
             return $next($request);
         }
         return Redirect::back();
-        // return $next($request);
-
     }
 }

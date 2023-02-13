@@ -5,7 +5,14 @@
 @endpush
 
 @section('content')
-<h1>Sửa thuộc tính</h1>
+<div class="title" style="display:flex">
+    <a href="{{route('attribute.index')}}">
+        <i class="fa-solid fa-arrow-left"></i>
+        Quay Lại
+    </a>
+    <h4 style="margin-left:10px;margin-top:-5px">Sửa thuộc tính</h4>
+</div>
+{{-- <h1>Sửa thuộc tính</h1> --}}
 <form action="{{route('attribute.update',$data['id'])}}" method="post" enctype="multipart/form-data">
     @csrf
     @method('PATCH')

@@ -2,7 +2,13 @@
 
 
 @section('content')
-<h1 class="title">Thêm Danh Mục</h1>
+<div class="title" style="display:flex">
+    <a href="{{route('category.index')}}">
+        <i class="fa-solid fa-arrow-left"></i>
+        Quay Lại
+    </a>
+    <h4 style="margin-left:10px;margin-top:-5px">Thêm danh mục</h4>
+</div>
 <form action="{{route('category.store')}}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="form-group">
