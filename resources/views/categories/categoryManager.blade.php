@@ -4,10 +4,6 @@
 <div class="category-manager">
     <div class="category-manager-title" style="display:flex;justify-content:space-between">
         <h1>Quản lý danh mục</h1>
-        <form action="{{route('category.index')}}" method="get">
-            <input type="text" name="search">
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
         <button class="btn btn-outline-primary">
             <a href="{{route('category.create')}}">
                 Thêm danh mục

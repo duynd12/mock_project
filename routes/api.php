@@ -32,21 +32,14 @@ Route::middleware('auth:sanctum')->get('/user1', function (Request $request) {
     return $request->user();
 });
 
-Route::patch('updateDiscount/{name}', function ($name) {
-    return Product::where('name', 'like', '%' . $name . '%')->update(
-        ['discount' => 10]
-    );
-});
 
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
 Route::get('logout', [UserController::class, 'logout']);
 
 
-// Route::post('login', [UserController::class, 'login']);
 
 Route::get('products', [ProductController::class, 'index']);
-// Route::get('orders', [OrderController::class, 'index']);
 
 Route::get('products/{id}', [ProductController::class, 'show']);
 Route::get('search', [ProductController::class, 'searchProduct']);

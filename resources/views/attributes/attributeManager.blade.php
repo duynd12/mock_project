@@ -5,10 +5,6 @@
 <div class="category-manager">
     <div class="category-manager-title">
         <h1>Quản lý  Thuộc tính </h1>
-        <form action="{{route('attribute.index')}}" method="get">
-            <input type="text" name="search">
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
         <div class="button" style="float: right;">
             <button class="btn btn-outline-primary">
                 <a href="{{route('attribute.create')}}">

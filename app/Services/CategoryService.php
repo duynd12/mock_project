@@ -37,26 +37,30 @@ class CategoryService
     }
     public function updateCategory($request, $id)
     {
+        // $data_product = $request->only('products') != null ? $request->only('products') : [];
+
         try {
             DB::beginTransaction();
 
-            // 7022023 test
             $data = $this->productService->getIdCateOrProduct('product', $id);
+
             $data_product = $request->only('products');
+            if (!$request->has('products')) {
+                $data_product['products'] = [];
+            }
+
             $array_data = $request->all();
             $categories = Category::find($id);
 
 
-            if (count($data_product) > 0) {
-                foreach ($data as $value) {
-                    if (!in_array($value, $data_product['products'])) {
-                        $categories->products()->detach($value);
-                    }
+            foreach ($data as $value) {
+                if (!in_array($value, $data_product['products'])) {
+                    $categories->products()->detach($value);
                 }
-                foreach ($data_product['products'] as $value) {
-                    if (!in_array($value, $data)) {
-                        $categories->products()->attach($value);
-                    }
+            }
+            foreach ($data_product['products'] as $value) {
+                if (!in_array($value, $data)) {
+                    $categories->products()->attach($value);
                 }
             }
             $this->categoryRepository->update([

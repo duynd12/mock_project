@@ -252,23 +252,31 @@ class ProductService
     public function updateProduct(array $data, $id)
     {
         $this->productConstants->setHandle(NotifyConstants::UPDATE);
-
         try {
             DB::beginTransaction();
             $array_size = $this->getAttributeById('size', $id);
             $array_color = $this->getAttributeById('color', $id);
+            $categories = [];
+            $sizes = [];
+            $colors = [];
+            $images = [];
             if (isset($data['categories'])) {
-                $this->updateCategory($id, $data['categories']);
+                $categories = $data['categories'];
             };
+            $this->updateCategory($id, $categories);
+
             if (isset($data['sizes'])) {
-                $this->updateAttribute($id, $array_size, $data['sizes']);
+                $sizes = $data['sizes'];
             };
+            $this->updateAttribute($id, $array_size, $sizes);
             if (isset($data['colors'])) {
-                $this->updateAttribute($id, $array_color, $data['colors']);
+                $colors = $data['colors'];
             };
+            $this->updateAttribute($id, $array_color, $colors);
             if (isset($data['images'])) {
-                $this->upLoadImage($data['images'], $id);
+                $images = $data['images'];
             }
+            $this->upLoadImage($images, $id);
 
             $this->productRepository->update([
                 'name' => $data['name'],
@@ -281,7 +289,7 @@ class ProductService
             Notify::success($this->productConstants->getNotifySuccess());
         } catch (\Exception $e) {
             DB::commit();
-            Notify::success($e->getMessage());
+            Notify::error($e->getMessage());
         }
     }
 
