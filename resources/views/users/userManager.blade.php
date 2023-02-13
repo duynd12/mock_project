@@ -30,19 +30,23 @@
                 <td>{{$user->profiles['dob']!=null ?$user->profiles['dob'] : 'null'}}</td>
                 @if($user['status'] == 'block')
                     <td>
-                        <button class="btn btn-outline-primary">
-                            <a href="{{route('user.unlock',$user->id)}}">
-                                Mở Block
-                            </a>
-                        </button>
+                        <form action="{{route('user.unlock',$user->id)}}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            @method('PATCH')
+                            <button class="btn btn-outline-primary">
+                                    Mở Block
+                            </button>
+                        </form>
                     </td>
                 @else
                     <td>
-                    <button class="btn btn-outline-danger">
-                        <a href="{{route('user.lock',$user->id)}}">
-                            Block
-                        </a>
-                    </button>
+                         <form action="{{route('user.lock',$user->id)}}" method="post" enctype="multipart/form-data">
+                            @csrf
+                            @method('PATCH')
+                            <button class="btn btn-outline-danger">
+                                    Block
+                            </button>
+                        </form>
                 </td>
                 @endif
 

@@ -25,17 +25,19 @@
                 <th scope="row">{{$cate['id']}}</th>
                 <td>{{$cate['title']}}</td>
                 <td>{{$cate['status']}}</td>
-                <td>
-                    <button class="btn btn-primary">
+                <td style="display:flex">
+                    <button class="btn btn-primary" style="margin-right:10px">
                         <a href="{{route('category.edit',$cate['id']) }}" style="color:white">
                             Edit
                         </a>
                     </button>
-                    <button class="btn btn-danger">
-                        <a href="{{route('category.destroy',$cate['id']) }}" style="color:white">
-                            Delete
-                        </a>
-                    </button>
+                    <form action="{{route('category.destroy',$cate['id']) }}" method="post" enctype="multipart/form">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-outline-danger">
+                                Delete
+                        </button>
+                    </form>
                 </td>
             </tr>
             @endforeach

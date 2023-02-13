@@ -8,6 +8,7 @@
 <h1>Sửa thuộc tính</h1>
 <form action="{{route('attribute.update',$data['id'])}}" method="post" enctype="multipart/form-data">
     @csrf
+    @method('PATCH')
     <div class="form-group">
         <label for="exampleInputEmail1">Tên thuộc tính : </label>
         <input type="text" class="form-control" id="exampleInputEmail1" value='{{$data['name']}}' name="name" aria-describedby="emailHelp">

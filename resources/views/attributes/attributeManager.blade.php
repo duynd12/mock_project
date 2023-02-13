@@ -28,22 +28,24 @@
                 <th scope="row">{{$attr['id']}}</th>
                 <td>{{$attr['name']}}</td>
                 
-                <td>
+                <td style="display:flex"> 
                     <button class="btn btn-outline-primary">
                         <a href="{{route('attribute.show',$attr['id']) }}" >
                             Xem chi tiết
                         </a>
                     </button>
-                    <button class="btn btn-primary">
-                        <a href="{{route('attribute.edit',$attr['id']) }}" style="color:white">
-                            Edit
-                        </a>
-                    </button>
-                    <button class="btn btn-danger">
-                        <a href="{{route('attribute.destroy',$attr['id']) }}" style="color:white">
-                            Delete
-                        </a>
-                    </button>
+                     <button class="btn btn-outline-primary" style="margin-right:10px;margin-left:10px">        
+                            <a href="{{route('attribute.edit',$attr['id']) }}">
+                                Edit
+                            </a>
+                        </button>
+                    <form action="{{route('attribute.destroy',$attr['id']) }}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-outline-danger" type="submit">        
+                            DELETE
+                        </button>
+                    </form>
                 </td>
             </tr>
             @endforeach

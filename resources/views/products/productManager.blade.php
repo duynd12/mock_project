@@ -38,17 +38,19 @@
                                 style="max-width: 50px; max-heigh: 50px">
                     @endforeach
                 </td>
-                <td>
-                    <button class="btn btn-primary">
+                <td style="display:flex">
+                    <button class="btn btn-primary" style="margin-right:10px">
                         <a href="{{route('product.edit',$pro['id'])}}" style="color:white">
                             Edit
                         </a>
                     </button>
-                    <button class="btn btn-danger">
-                        <a href="{{route('product.destroy',$pro['id'])}}" style="color:white">
-                            Delete
-                        </a>
-                    </button>
+                    <form action="{{route('product.destroy',$pro['id'])}}" method="post" enctype="multipart/form">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-outline-danger">
+                                Delete
+                        </button>
+                    </form>
                 </td>
             </tr>
             @endforeach

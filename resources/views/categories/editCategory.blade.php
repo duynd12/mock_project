@@ -4,6 +4,7 @@
 <h1 class="title">Sửa Danh Mục</h1>
 <form action="{{route('category.update',$data['id'])}}" method="post" enctype="multipart/form-data">
     @csrf
+    @method('PATCH')
     <div class="form-group">
         <label for="exampleInputEmail1">Tên Danh Mục : </label>
         <input type="text" class="form-control" id="exampleInputEmail1" value="{{$data['title']}}" name="title">

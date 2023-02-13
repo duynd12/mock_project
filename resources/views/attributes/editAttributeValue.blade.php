@@ -8,6 +8,7 @@
 <h1>Sửa value thuộc tính</h1>
 <form action="{{route('attributeValue.update',$data['id'])}}" method="post" enctype="multipart/form-data">
     @csrf
+    @method('PATCH')
     <div class="form-group">
         <label for="exampleInputEmail1">Tên Vaue thuộc tính : </label>
         <input type="text" class="form-control" id="exampleInputEmail1" value='{{$data['value_name']}}' name="value_name" aria-describedby="emailHelp">

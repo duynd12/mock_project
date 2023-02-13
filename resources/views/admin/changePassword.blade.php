@@ -8,6 +8,7 @@
 <h2 class="title">Đổi mật khẩu</h2>
 <form action="{{route('admin.update')}}" method="post">
     @csrf
+    @method('PATCH')
     <div class="form-group">
         <label for="exampleInputEmail1">Mật khẩu cũ:</label>
         <input type="password" class="form-control" id="exampleInputEmail1" name="oldPassword">

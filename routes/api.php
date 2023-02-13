@@ -5,7 +5,6 @@ use App\Http\Controllers\api\OrderController;
 use App\Http\Controllers\api\ProductController;
 use App\Http\Controllers\api\ProfileController;
 use App\Http\Controllers\api\UserController;
-use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,11 +19,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('orders', [OrderController::class, 'index']);
 Route::group(['middleware' => ['jwt.verify', 'auth:api']], function () {
+    Route::get('orders', [OrderController::class, 'index']);
     Route::get('user', [UserController::class, 'getAuthenticatedUser']);
     Route::get('member/history', [OrderController::class, 'show']);
-
     Route::post('orders', [OrderController::class, 'store']);
     Route::put('member/edit', [ProfileController::class, 'update']);
 });
@@ -33,19 +31,23 @@ Route::middleware('auth:sanctum')->get('/user1', function (Request $request) {
 });
 
 
-Route::post('register', [UserController::class, 'register']);
-Route::post('login', [UserController::class, 'login']);
-Route::get('logout', [UserController::class, 'logout']);
+Route::controller(UserController::class)->group(function () {
+    Route::post('register', 'register');
+    Route::post('login', 'login');
+    Route::get('logout', 'logout');
+});
 
+Route::controller(ProductController::class)->group(function () {
 
+    Route::get('products', 'index');
+    Route::get('products/{id}', 'show');
+    Route::get('search', 'searchProduct');
+});
 
-Route::get('products', [ProductController::class, 'index']);
-
-Route::get('products/{id}', [ProductController::class, 'show']);
-Route::get('search', [ProductController::class, 'searchProduct']);
-
-Route::get('categories', [CategoryController::class, 'index']);
-Route::get('categories/{id}', [CategoryController::class, 'show']);
+Route::controller(CategoryController::class)->group(function () {
+    Route::get('categories', 'index');
+    Route::get('categories/{id}', 'show');
+});
 
 // store
 Route::group(['middleware' => ['jwt.verify']], function () {

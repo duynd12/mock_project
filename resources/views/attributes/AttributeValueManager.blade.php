@@ -31,17 +31,19 @@
                 <th scope="row">{{$attrValue['id']}}</th>
                 <td>{{$data['name']}}</td>
                 <td>{{$attrValue['value_name']}}</td>
-                <td>
-                    <button class="btn btn-primary">
+                <td style="display:flex">
+                    <button class="btn btn-primary" style="margin-right:10px;">
                         <a href="{{route('attributeValue.edit',$attrValue['id']) }}" style="color:white">
                             Edit
                         </a>
                     </button>
-                    <button class="btn btn-danger">
-                        <a href="{{route('attributeValue.destroy',$attrValue['id']) }}" style="color:white">
-                            Delete
-                        </a>
-                    </button>
+                    <form action="{{route('attributeValue.destroy',$attrValue['id']) }}" method="post" enctype="multipart/form-data">
+                        @csrf
+                        @method('DELETE')
+                        <button class="btn btn-outline-danger" type="submit">        
+                            DELETE
+                        </button>
+                    </form>
                 </td>
             </tr>
             @endforeach

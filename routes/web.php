@@ -9,14 +9,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\StatisticController;
 use App\Http\Controllers\UserController;
-use App\Models\Attribute;
-use App\Models\Category;
-use App\Models\Order;
-use App\Models\Product;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Routing\RouteGroup;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,24 +37,24 @@ Route::middleware('checklogin')->group(function () {
         Route::get('/them-san-pham', 'create')->name('product.create');
         Route::post('/createProduct', 'store')->name('prodcut.store');
         Route::get('/sua-san-pham/{id}', 'edit')->name('product.edit');
-        Route::post('/edit-product/{id}', 'update')->name('product.update');
-        Route::get('/deleteProduct/{id}', 'destroy')->name('product.destroy');
+        Route::patch('/edit-product/{id}', 'update')->name('product.update');
+        Route::delete('/deleteProduct/{id}', 'destroy')->name('product.destroy');
     });
 
     Route::controller(CategoryController::class)->group(function () {
         Route::get('/quan-ly-danh-muc', 'index')->name('category.index');
         Route::get('/quan-ly-danh-muc/{id}', 'edit')->name('category.edit');
-        Route::post('/edit-category/{id}', 'update')->name('category.update');
+        Route::patch('/edit-category/{id}', 'update')->name('category.update');
         Route::post('/createCategory', 'store')->name('category.store');
-        Route::get('/deleteCategory/{id}', 'destroy')->name('category.destroy');
+        Route::delete('/deleteCategory/{id}', 'destroy')->name('category.destroy');
         Route::get('/them-danh-muc', 'create')->name('category.create');
     });
     Route::controller(AttributeController::class)->group(function () {
         Route::get('/quan-ly-thuoc-tinh', 'index')->name('attribute.index');
         Route::get('/quan-ly-thuoc-tinh/{id}', 'edit')->name('attribute.edit');
-        Route::post('/edit-attribute/{id}', 'update')->name('attribute.update');
+        Route::patch('/edit-attribute/{id}', 'update')->name('attribute.update');
         Route::post('/attribute', 'store')->name('attribute.store');
-        Route::get('/deleteAttribute/{id}', 'destroy')->name('attribute.destroy');
+        Route::delete('/deleteAttribute/{id}', 'destroy')->name('attribute.destroy');
         Route::get('/them-thuoc-tinh', 'create')->name('attribute.create');
         Route::get('/chi-tiet-thuoc-tinh/{id}', 'show')->name('attribute.show');
     });
@@ -71,10 +63,10 @@ Route::middleware('checklogin')->group(function () {
 
     Route::get('chi-tiet-don-hang/{id}', [OrderController::class, 'show'])->name('order.show');
     Route::get('doi-mat-khau', [AdminContrller::class, 'edit'])->name('admin.edit');
-    Route::post('doi-mat-khau', [AdminContrller::class, 'update'])->name('admin.update');
+    Route::patch('doi-mat-khau', [AdminContrller::class, 'update'])->name('admin.update');
 
-    Route::get('user-unlock/{id}', [UserController::class, 'update'])->name('user.unlock');
-    Route::get('user-lock/{id}', [UserController::class, 'update'])->name('user.lock');
+    Route::patch('user-unlock/{id}', [UserController::class, 'update'])->name('user.unlock');
+    Route::patch('user-lock/{id}', [UserController::class, 'update'])->name('user.lock');
 });
 Route::controller(AdminContrller::class)->group(function () {
     Route::get('admin/login', 'create')->name('admin.create');
@@ -83,12 +75,8 @@ Route::controller(AdminContrller::class)->group(function () {
     Route::post('admin/register', 'store')->name('admin.store');
     Route::get('admin/logout', 'logout')->name('admin.logout');
 });
-// Route::get('them-value-thuoc-tinh/{id}', [AttributeValueController::class, 'showformCreate'])->name('attributeValue.showformCreate');
 Route::post('them-value-thuoc-tinh/{id}', [AttributeValueController::class, 'store'])->name('attributeValue.store');
 Route::get('sua-value-thuoc-tinh/{id}', [AttributeValueController::class, 'edit'])->name('attributeValue.edit');
-Route::post('sua-value-thuoc-tinh/{id}', [AttributeValueController::class, 'update'])->name('attributeValue.update');
-Route::get('xoa-value-thuoc-tinh/{id}', [AttributeValueController::class, 'destroy'])->name('attributeValue.destroy');
+Route::patch('sua-value-thuoc-tinh/{id}', [AttributeValueController::class, 'update'])->name('attributeValue.update');
+Route::delete('xoa-value-thuoc-tinh/{id}', [AttributeValueController::class, 'destroy'])->name('attributeValue.destroy');
 Route::get('them-value-thuoc-tinh/{id}', [AttributeValueController::class, 'create'])->name('attributeValue.create');
-
-// Route::get('sua-thuoc-tinh/{id}', [AttributeController::class, 'edit'])->name('attribute.edit');
-// Route::post('sua-value-thuoc-tinh/{id}', [AttributeController::class, 'update'])->name('attribute.update');
